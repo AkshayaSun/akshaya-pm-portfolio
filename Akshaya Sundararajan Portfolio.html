@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akshaya Sundararajan Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: an annotated spec sheet. Each case study reads top to bottom like a design handoff:
+   problem → research → wireframes with numbered redline pins → working prototype → decision log → shipped impact. */
+:root{
+  --paper:#F2F3F0; --surface:#FFFFFF; --ink:#15171C; --muted:#5A606C; --rule:#D8DAD4;
+  --accent:#2340D8; --accent-soft:#E3E8FF; --on-accent:#FFFFFF;
+  --wf:#E7E9E4; --wf-2:#D3D6D0; --wf-line:#9399A1;
+  --ok:#1D7F4E; --ok-soft:#DDF1E6; --warn:#9A6212; --warn-soft:#F8ECD6; --bad:#B5302A; --bad-soft:#F8DEDC;
+  --display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1115; --surface:#181B21; --ink:#ECEDEF; --muted:#9BA1AD; --rule:#2B2F37;
+    --accent:#8197FF; --accent-soft:#1E2550; --on-accent:#0B0D12;
+    --wf:#21252C; --wf-2:#2D323A; --wf-line:#5C636E;
+    --ok:#5BC98F; --ok-soft:#14301F; --warn:#E3AD5A; --warn-soft:#352812; --bad:#F07B72; --bad-soft:#3A1715;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1115; --surface:#181B21; --ink:#ECEDEF; --muted:#9BA1AD; --rule:#2B2F37;
+  --accent:#8197FF; --accent-soft:#1E2550; --on-accent:#0B0D12;
+  --wf:#21252C; --wf-2:#2D323A; --wf-line:#5C636E;
+  --ok:#5BC98F; --ok-soft:#14301F; --warn:#E3AD5A; --warn-soft:#352812; --bad:#F07B72; --bad-soft:#3A1715;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-0.01em}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+.prose{max-width:65ch}
+.mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:56px}
+.nav .mark{font-family:var(--display);font-weight:800;font-size:18px;text-decoration:none;color:var(--ink)}
+.nav nav{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap}
+.nav nav a{color:var(--muted);text-decoration:none;font-size:14px}
+.nav nav a:hover{color:var(--ink)}
+.nav nav a span{font-family:var(--mono);font-size:11px;margin-right:4px;color:var(--accent)}
+@media (max-width:720px){.nav nav a.long{display:none}}
+
+/* hero */
+.hero{padding:72px 0 40px;position:relative}
+.hero h1{font-size:clamp(38px,5.8vw,76px);font-weight:800;max-width:17ch}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{margin-top:24px;font-size:19px;color:var(--muted);max-width:60ch}
+.hero .meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px}
+.hero .meta div{display:flex;flex-direction:column}
+.hero .meta b{font-family:var(--display);font-size:28px;font-weight:700}
+.hero .meta span{font-size:13px;color:var(--muted)}
+.lattice{position:absolute;right:0;top:40px;width:260px;height:260px;opacity:.5;pointer-events:none}
+@media (max-width:900px){.lattice{display:none}}
+
+.index{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0 24px}
+@media (max-width:860px){.index{grid-template-columns:1fr}}
+.index a{display:flex;flex-direction:column;gap:10px;padding:20px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
+.index a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.index .num{font-family:var(--display);font-size:44px;font-weight:800;color:var(--accent);line-height:1}
+.index h3{font-size:22px}
+.index p{font-size:14.5px;color:var(--muted)}
+.index .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.tag{font-family:var(--mono);font-size:11px;padding:3px 8px;border:1px solid var(--rule);border-radius:99px;color:var(--muted)}
+
+/* case study */
+.case{padding:88px 0 40px;border-top:1px solid var(--rule)}
+.case-head{display:grid;grid-template-columns:auto 1fr;gap:12px 28px;align-items:end}
+.case-head .big{font-family:var(--display);font-weight:800;font-size:clamp(80px,12vw,150px);line-height:.8;color:var(--accent);grid-row:span 2}
+.case-head h2{font-size:clamp(32px,4.4vw,56px);font-weight:800}
+.case-head .sub{font-size:19px;color:var(--muted);max-width:62ch}
+@media (max-width:640px){.case-head{grid-template-columns:1fr}.case-head .big{grid-row:auto}}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:36px 0 8px}
+.facts div{background:var(--surface);padding:14px 16px}
+.facts dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:4px 0 0;font-size:15px;font-weight:500}
+@media (max-width:760px){.facts{grid-template-columns:1fr 1fr}}
+
+.block{margin-top:64px}
+.block-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+.block-head .step{font-family:var(--mono);font-size:12px;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 6px}
+.block-head h3{font-size:clamp(24px,2.8vw,34px);font-weight:700}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media (max-width:900px){.four{grid-template-columns:1fr 1fr}.three{grid-template-columns:1fr}}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+@media (max-width:480px){.four{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:20px}
+.card h4{font-size:19px;margin-bottom:8px}
+.card p,.card li{font-size:15px;color:var(--muted)}
+.card ul{margin:8px 0 0;padding-left:18px}
+.stat{font-family:var(--display);font-size:46px;font-weight:800;line-height:1;color:var(--ink)}
+.stat-label{font-size:14px;color:var(--muted);margin-top:6px}
+.callout{border-left:3px solid var(--accent);padding:4px 0 4px 18px;font-size:18px;max-width:62ch}
+.quote{font-family:var(--display);font-size:22px;font-weight:500;line-height:1.3}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* process */
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--surface)}
+.process>div{padding:18px;border-right:1px solid var(--rule)}
+.process>div:last-child{border-right:0}
+.process h4{font-size:18px;display:flex;gap:8px;align-items:baseline}
+.process h4 span{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.process ul{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}
+.process li{font-size:14px;padding:8px 10px;background:var(--wf);border-radius:6px}
+.process li b{display:block;font-weight:600;font-size:14px}
+.process li span{color:var(--muted);font-size:13px}
+@media (max-width:860px){.process{grid-template-columns:1fr 1fr}.process>div:nth-child(2){border-right:0}.process>div:nth-child(-n+2){border-bottom:1px solid var(--rule)}}
+@media (max-width:520px){.process{grid-template-columns:1fr}.process>div{border-right:0;border-bottom:1px solid var(--rule)}}
+
+/* personas */
+.persona{display:flex;flex-direction:column;gap:12px}
+.persona .who{display:flex;gap:12px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:18px;flex:none}
+.persona .who b{display:block;font-size:17px}
+.persona .who span{font-size:13px;color:var(--muted)}
+.persona dl{margin:0;display:grid;gap:8px}
+.persona dt{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.persona dd{margin:0;font-size:14.5px}
+.persona .q{font-style:italic;font-size:15px;border-top:1px dashed var(--rule);padding-top:10px}
+
+/* bar chart */
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 36px;gap:12px;align-items:center;font-size:14px}
+.bar-track{height:22px;background:var(--wf);border-radius:4px;position:relative;overflow:hidden}
+.bar-fill{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:4px}
+.bar-row.low .bar-fill{background:var(--wf-line)}
+.bar-row b{font-variant-numeric:tabular-nums;text-align:right}
+.axis{display:grid;grid-template-columns:150px 1fr 36px;gap:12px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.axis div{display:flex;justify-content:space-between}
+@media (max-width:480px){.bar-row,.axis{grid-template-columns:96px 1fr 30px}}
+
+/* matrix */
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.matrix div{background:var(--surface);padding:16px}
+.matrix b{font-family:var(--display);font-size:20px}
+.matrix p{font-size:14px;color:var(--muted);margin-top:4px}
+
+/* toggles */
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;padding:3px;background:var(--surface);gap:2px;flex-wrap:wrap}
+.seg button{font:500 14px var(--body);border:0;background:transparent;color:var(--muted);padding:7px 14px;border-radius:6px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:hover:not([aria-pressed="true"]){color:var(--ink)}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+
+/* wireframes */
+.wf-stage{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.wf-stage{grid-template-columns:1fr}}
+.wf-frame{background:var(--surface);border:1.5px solid var(--wf-line);border-radius:10px;overflow:hidden;position:relative}
+.wf-chrome{height:28px;border-bottom:1.5px solid var(--wf-line);display:flex;align-items:center;gap:6px;padding:0 10px;background:var(--wf)}
+.wf-chrome i{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--wf-line)}
+.wf-chrome span{margin-left:10px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.wf-body{padding:14px;display:grid;gap:10px;position:relative;min-height:380px;align-content:start}
+.wf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wf-box{border:1.5px solid var(--wf-line);border-radius:6px;padding:8px;background:var(--surface);font-family:var(--mono);font-size:11px;color:var(--muted);position:relative}
+.wf-fill{background:var(--wf)}
+.wf-dark{background:var(--wf-2)}
+.wf-img{background:var(--wf);border:1.5px solid var(--wf-line);border-radius:6px;position:relative;overflow:hidden;min-height:60px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.wf-img::before,.wf-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - .75px),var(--wf-line) calc(50% - .75px),var(--wf-line) calc(50% + .75px),transparent calc(50% + .75px))}
+.wf-img::after{transform:scaleX(-1)}
+.wf-img span{position:relative;z-index:1;background:var(--wf);padding:2px 6px}
+.wf-line{height:8px;border-radius:4px;background:var(--wf-2)}
+.wf-btn{border:1.5px solid var(--wf-line);border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--wf)}
+.wf-btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.wf-input{border:1.5px solid var(--wf-line);border-radius:6px;padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface);flex:1;min-width:90px}
+.wf-chip{border:1.5px solid var(--wf-line);border-radius:99px;padding:3px 9px;font-family:var(--mono);font-size:10.5px;color:var(--ink)}
+.wf-h{font-family:var(--display);font-weight:700;font-size:18px;color:var(--ink)}
+.wf-t{font-size:12.5px;color:var(--ink)}
+.wf-grid{display:grid;gap:8px}
+.pin{position:absolute;width:24px;height:24px;border-radius:50%;background:var(--bad);color:#fff;font:600 12px var(--mono);display:grid;place-items:center;box-shadow:0 0 0 3px var(--surface);z-index:3}
+.pin.good{background:var(--accent);color:var(--on-accent)}
+.notes{display:grid;gap:12px;counter-reset:n}
+.note{display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:15px}
+.note .pin{position:static;box-shadow:none}
+.note b{display:block}
+.note span{color:var(--muted);font-size:14.5px}
+.state-label{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:99px;margin-bottom:12px}
+.state-label.before{background:var(--bad-soft);color:var(--bad)}
+.state-label.after{background:var(--accent-soft);color:var(--accent)}
+[hidden]{display:none!important}
+
+/* phones */
+.phones{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media (max-width:760px){.phones{grid-template-columns:1fr;max-width:320px;margin:0 auto}}
+.phone{border:1.5px solid var(--wf-line);border-radius:26px;padding:12px 10px 16px;background:var(--surface)}
+.phone .notch{width:60px;height:6px;border-radius:6px;background:var(--wf-2);margin:0 auto 12px}
+.phone .wf-body{min-height:400px;padding:4px}
+.phone-cap{font-size:14px;margin-top:10px}
+.phone-cap b{font-family:var(--mono);font-size:12px;color:var(--accent);margin-right:6px}
+
+/* decisions */
+.decisions{display:grid;gap:14px}
+.decision{display:grid;grid-template-columns:200px 1fr 1fr;gap:24px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:22px}
+.decision h4{font-size:20px}
+.decision .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.decision .lbl.t{color:var(--warn)}
+.decision p{font-size:15px}
+@media (max-width:860px){.decision{grid-template-columns:1fr;gap:12px}}
+
+/* impact */
+.impact{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.impact div{background:var(--surface);padding:22px}
+.impact .stat{color:var(--accent)}
+@media (max-width:860px){.impact{grid-template-columns:1fr 1fr}}
+
+/* journey table */
+.scroll-x{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table.journey{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
+.journey th,.journey td{padding:12px 14px;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);vertical-align:top;text-align:left}
+.journey th{font-family:var(--display);font-size:16px;background:var(--wf)}
+.journey th:first-child,.journey td:first-child{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);width:110px}
+.journey tr:last-child td{border-bottom:0}
+.journey td:last-child,.journey th:last-child{border-right:0}
+.hot{background:var(--bad-soft)}
+.hot-tag{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--bad);margin-top:4px}
+
+/* kumiko */
+.layers{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:end}
+.layer{border:1.5px solid var(--wf-line);border-radius:8px;padding:14px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.layer:nth-child(1){min-height:110px}.layer:nth-child(2){min-height:140px}.layer:nth-child(3){min-height:170px}.layer:nth-child(4){min-height:200px}.layer:nth-child(5){min-height:230px;border-color:var(--accent)}
+.layer b{font-family:var(--display);font-size:18px}
+.layer span{font-size:13px;color:var(--muted)}
+.layer .mono{color:var(--accent)}
+@media (max-width:860px){.layers{grid-template-columns:1fr}.layer{min-height:0!important}}
+
+.ds{--b-primary:#C8102E;--b-primary-ink:#fff;--b-surface:#fff;--b-ink:#1B1B1F;--b-muted:#5E616B;--b-line:#D4D6DB;--b-radius:4px;--b-font:"IBM Plex Sans",system-ui,sans-serif;--b-pad:12px;--b-focus:#C8102E;
+  background:var(--b-surface);color:var(--b-ink);border-radius:12px;border:1px solid var(--rule);padding:24px;display:grid;gap:18px;font-family:var(--b-font)}
+.ds[data-brand="b"]{--b-primary:#1E3A5F;--b-radius:10px;--b-focus:#1E3A5F}
+.ds[data-brand="c"]{--b-primary:#0F766E;--b-radius:999px;--b-focus:#0F766E}
+.ds[data-density="compact"]{--b-pad:7px}
+.ds-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ds-btn{font:600 14px var(--b-font);padding:var(--b-pad) calc(var(--b-pad) * 1.6);border-radius:var(--b-radius);border:1.5px solid var(--b-primary);background:var(--b-primary);color:var(--b-primary-ink);cursor:pointer}
+.ds-btn.sec{background:transparent;color:var(--b-primary)}
+.ds-btn.ghost{background:transparent;border-color:transparent;color:var(--b-primary);text-decoration:underline}
+.ds-btn:focus-visible{outline:3px solid color-mix(in srgb,var(--b-focus) 40%,transparent);outline-offset:2px}
+.ds-field{display:grid;gap:4px;min-width:200px;flex:1}
+.ds-field label{font-size:13px;font-weight:600}
+.ds-field input{font:14px var(--b-font);padding:var(--b-pad);border:1.5px solid var(--b-line);border-radius:min(var(--b-radius),10px);background:#fff;color:var(--b-ink)}
+.ds-field input:focus{outline:none;border-color:var(--b-primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--b-primary) 22%,transparent)}
+.ds-field.err input{border-color:#B42318}
+.ds-field small{font-size:12px;color:var(--b-muted)}
+.ds-field.err small{color:#B42318}
+.ds-alert{display:flex;gap:10px;padding:var(--b-pad) 14px;border-radius:min(var(--b-radius),10px);background:color-mix(in srgb,var(--b-primary) 9%,#fff);border-left:4px solid var(--b-primary);font-size:14px}
+.ds-chip{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--b-primary) 12%,#fff);color:var(--b-primary)}
+.ds-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.ds-table th{text-align:left;font-size:12px;color:var(--b-muted);font-weight:600;border-bottom:1.5px solid var(--b-line);padding:var(--b-pad) 8px}
+.ds-table td{border-bottom:1px solid var(--b-line);padding:var(--b-pad) 8px}
+.ds-card{border:1px solid var(--b-line);border-radius:min(var(--b-radius),14px);padding:14px;display:grid;gap:6px;flex:1;min-width:180px}
+.ds-card b{font-size:15px}
+.ds-card span{font-size:13px;color:var(--b-muted)}
+.ds-switch{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.ds-switch i{width:36px;height:20px;border-radius:99px;background:var(--b-primary);position:relative}
+.ds-switch i::after{content:"";position:absolute;right:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff}
+.tokens{font-family:var(--mono);font-size:12.5px;display:grid;gap:6px}
+.tokens div{display:grid;grid-template-columns:18px 1fr auto;gap:10px;align-items:center;padding:6px 10px;background:var(--surface);border:1px solid var(--rule);border-radius:6px}
+.tokens i{width:16px;height:16px;border-radius:4px;border:1px solid var(--rule)}
+.tokens span{color:var(--muted)}
+
+/* worldpay prototype */
+.proto{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:0;background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+@media (max-width:900px){.proto{grid-template-columns:1fr}}
+.proto-main{padding:22px;border-right:1px solid var(--rule)}
+@media (max-width:900px){.proto-main{border-right:0;border-bottom:1px solid var(--rule)}}
+.proto-side{padding:22px;background:color-mix(in srgb,var(--wf) 55%,var(--surface))}
+.stepper{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
+.stepper button{display:flex;align-items:center;gap:8px;font:500 13px var(--body);background:transparent;border:1px solid var(--rule);border-radius:99px;padding:5px 12px 5px 5px;color:var(--muted);cursor:pointer}
+.stepper button:disabled{cursor:not-allowed;opacity:.55}
+.stepper button i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--wf);font:600 11px var(--mono);color:var(--muted)}
+.stepper button[aria-current="step"]{border-color:var(--accent);color:var(--ink)}
+.stepper button[aria-current="step"] i{background:var(--accent);color:var(--on-accent)}
+.stepper button.done i{background:var(--ok);color:#fff}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.fgrid{grid-template-columns:1fr}}
+.f{display:grid;gap:5px}
+.f.full{grid-column:1/-1}
+.f label{font-size:13px;font-weight:600}
+.f input,.f select{font:15px var(--body);padding:9px 11px;border:1.5px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);width:100%}
+.f input:focus,.f select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.f .help{font-size:12.5px;color:var(--muted)}
+.f.warn input{border-color:var(--warn)}
+.f.warn .help{color:var(--warn)}
+.f.bad input{border-color:var(--bad)}
+.f.bad .help{color:var(--bad)}
+.unit{position:relative}
+.unit input{padding-right:46px}
+.unit span{position:absolute;right:11px;top:50%;transform:translateY(-50%);font:12px var(--mono);color:var(--muted);pointer-events:none}
+.tpl{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:8px;background:var(--accent-soft);color:var(--ink);font-size:14px}
+.tpl b{color:var(--accent)}
+details.adv{border:1px dashed var(--wf-line);border-radius:8px;padding:10px 14px;margin-top:6px}
+details.adv summary{cursor:pointer;font-weight:600;font-size:14px}
+details.adv summary span{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+details.adv .fgrid{margin-top:12px}
+.proto-nav{display:flex;justify-content:space-between;gap:10px;margin-top:22px;padding-top:16px;border-top:1px solid var(--rule)}
+.btn{font:600 14px var(--body);padding:10px 18px;border-radius:8px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--mono);padding:4px 10px;border-radius:99px}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.fee-table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+.fee-table th{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:right;padding:6px 4px;border-bottom:1px solid var(--rule)}
+.fee-table th:first-child,.fee-table td:first-child{text-align:left}
+.fee-table td{text-align:right;padding:8px 4px;border-bottom:1px solid var(--rule)}
+.fee-table td.tot{font-weight:600}
+.side-h{font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:4px}
+.side-sec{display:grid;gap:10px;margin-bottom:22px}
+.route-list{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:13.5px}
+.route-list li{padding:10px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--rule)}
+.route-list li.bad{border-color:var(--bad);color:var(--bad)}
+.route-list li.warn{border-color:var(--warn)}
+.review dl{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:0;font-size:14.5px}
+.review dt{color:var(--muted)}
+.review dd{margin:0;font-weight:500}
+.success{display:grid;gap:12px;padding:8px 0}
+.success .check{width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:22px}
+.legacy{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:stretch}
+@media (max-width:860px){.legacy{grid-template-columns:1fr 1fr}}
+.legacy .wf-frame .wf-body{min-height:190px;padding:10px;gap:7px}
+.legacy .cap{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px}
+
+.story dl{margin:0;display:grid;gap:10px}
+.story dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.story dd{margin:0;font-size:15px;color:var(--ink)}
+.about{padding:88px 0 96px;border-top:1px solid var(--rule)}
+.headline{display:flex;flex-wrap:wrap;gap:6px 0;margin-top:14px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.headline span:not(:last-child)::after{content:"|";margin:0 10px;color:var(--rule)}
+.skills{display:grid;gap:18px;margin-top:8px;align-content:start;position:sticky;top:80px;align-self:start}
+.skills h4{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:8px}
+.skills .comp{margin-top:0}
+.tag.ai{border-color:var(--accent);color:var(--accent)}
+.about-h{font-size:20px;margin-top:10px}
+.about-list{display:grid;gap:12px}
+.about-list>div{padding-left:16px;border-left:2px solid var(--rule);font-size:16px}
+.about-list b{color:var(--ink)}
+.about h2{font-size:clamp(32px,4.4vw,52px);font-weight:800}
+.comp{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+footer{border-top:1px solid var(--rule);padding:28px 0 40px;font-size:13px;color:var(--muted)}
+.disclaimer{font-size:13px;color:var(--muted);margin-top:14px;max-width:70ch}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="#top">Akshaya Sundararajan</a>
+    <nav aria-label="Case studies">
+      <a href="#bridgestone"><span>01</span><b class="long" style="font-weight:400">Bridgestone </b>X-Form</a>
+      <a href="#kumiko"><span>02</span>Kumiko</a>
+      <a href="#worldpay"><span>03</span><b class="long" style="font-weight:400">Worldpay </b>UPC</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <svg class="lattice" viewBox="0 0 120 120" aria-hidden="true">
+      <defs><pattern id="k" width="30" height="26" patternUnits="userSpaceOnUse">
+        <path d="M0 13 L15 0 L30 13 L15 26 Z M15 0 V26 M0 13 H30" fill="none" stroke="var(--accent)" stroke-width=".6"/></pattern></defs>
+      <rect width="120" height="120" fill="url(#k)"/>
+    </svg>
+    <p class="eyebrow">Senior Product Manager · Platform Modernization · Payments &amp; Billing · Austin, TX</p>
+    <h1>I turn ambiguous, data-heavy ecosystems into <em>products that scale.</em></h1>
+    <p class="lede">Over 10 years leading B2B and B2C platforms across fintech, healthcare, retail, and enterprise ecosystems. Below are three shipped products told from the inside out: the discovery, the working prototypes, and the product decisions and trade-offs that moved the needle.</p>
+    <div class="meta">
+      <div><b class="tnum">10+</b><span>years in product</span></div>
+      <div><b class="tnum">800K+</b><span>merchants on pricing I owned</span></div>
+      <div><b class="tnum">105</b><span>users tested on one IA</span></div>
+      <div><b class="tnum">14</b><span>cross-functional teams aligned</span></div>
+    </div>
+
+    <div class="index">
+      <a href="#bridgestone">
+        <span class="num">01</span>
+        <h3>Bridgestone X-Form</h3>
+        <p>One unified experience under one roof, with each brand keeping its identity, no fragmentation, and intuitive user workflows.</p>
+        <div class="tags"><span class="tag">UX research</span><span class="tag">Wireframes</span><span class="tag">Mobile-first</span></div>
+      </a>
+      <a href="#kumiko">
+        <span class="num">02</span>
+        <h3>Kumiko Design System</h3>
+        <p>Bridgestone's global design system: interlocking, token-driven components themable for every brand and region.</p>
+        <div class="tags"><span class="tag">Tokens</span><span class="tag">Governance</span><span class="tag">A11y</span></div>
+      </a>
+      <a href="#worldpay">
+        <span class="num">03</span>
+        <h3>Worldpay Unified Pricing Console</h3>
+        <p>A guided pricing builder with live fee previews and guardrails for 800K+ merchants and 4K partners.</p>
+        <div class="tags"><span class="tag">Fintech</span><span class="tag">Workflow</span><span class="tag">Prototype</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 01 BRIDGESTONE ============================ -->
+<section class="case" id="bridgestone">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="big">01</div>
+      <h2>Bridgestone X-Form</h2>
+      <p class="sub">Consolidating a fragmented multi-brand, multi-region estate onto one modern platform, with redesigned websites and mobile-first journeys, so 7 brands could ship once instead of rebuilding the same features again and again.</p>
+    </div>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Product Manager</dd></div>
+      <div><dt>Context</dt><dd>Multi-brand platform modernization and end-to-end UX and website redesigns for regulated B2B and B2C markets.</dd></div>
+      <div><dt>Scope</dt><dd>UX redefined across 7 brands · B2B + B2C · multi-region, tightly regulated markets</dd></div>
+      <div><dt>Collaborated with</dt><dd>Product, UX, engineering, regional marketing · 8+ teams</dd></div>
+    </dl>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Problem</span><h3>Every brand, BU and region ran its own stack</h3></div>
+      <div class="four">
+        <div class="card"><h4>Siloed stacks and clouds</h4><p>Brands, BUs and regional teams ran disconnected platforms and cloud environments, duplicating engineering effort and maintenance.</p></div>
+        <div class="card"><h4>Scattered data</h4><p>Product catalogs, tire specs, dealer inventory and customer data lived in separate systems and disagreed across regions.</p></div>
+        <div class="card"><h4>Broken experience</h4><p>Customers met slow, desktop-first pages and inconsistent branding as they moved between Bridgestone properties and devices.</p></div>
+        <div class="card"><h4>Slow time-to-market</h4><p>With no shared platform or governance, one new capability meant rebuilding the same feature across 8+ teams.</p></div>
+      </div>
+      <div class="two" style="margin-top:24px">
+        <p class="prose">For customers this showed up as an org chart they had to navigate. Bridgestone USA consumer, Bridgestone Canada, Motorcycle, Commercial (truck, ag and off-road) and Bandag retreads each had their own navigation, components and content. A fleet manager buying commercial tires and a retread program moved between two sites. A driver looking for a dealer found the locator in the footer. Every BU also wanted investment first.</p>
+        <div class="card">
+          <h4>What I owned as PM, end to end</h4>
+          <ul>
+            <li><b>Roadmap:</b> platform consolidation plan and cross-BU prioritization</li>
+            <li><b>Discovery:</b> research plan, stakeholder interviews and alignment</li>
+            <li><b>UX:</b> wireframing, prototyping and UX design direction with the design team</li>
+            <li><b>Definition:</b> PRDs, epics, user stories and acceptance criteria</li>
+            <li><b>Governance:</b> cross-BU intake and roadmap governance</li>
+            <li><b>Delivery:</b> UAT and release readiness across 8+ teams</li>
+            <li><b>Launch:</b> phased product launches and post-launch KPIs for engagement, conversion and velocity</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Research</span><h3>Foundational alignment before a single screen</h3></div>
+      <div class="four">
+        <div class="card"><div class="stat tnum">95</div><div class="stat-label">briefing documents analyzed</div></div>
+        <div class="card"><div class="stat tnum">105</div><div class="stat-label">users tested</div></div>
+        <div class="card"><div class="stat tnum">23</div><div class="stat-label">business stakeholders across 11 groups</div></div>
+        <div class="card"><div class="stat tnum">1K+</div><div class="stat-label">pages audited in the content matrix</div></div>
+      </div>
+
+      <h4 style="font-size:20px;margin:36px 0 14px">Four phases, each with a deliverable that fed the next</h4>
+      <div class="process">
+        <div><h4><span>1</span>Discovery</h4><ul>
+          <li><b>Audience research</b><span>Segment profiles per BU</span></li>
+          <li><b>Stakeholder interviews</b><span>Goals, KPIs and pain points</span></li>
+          <li><b>Current state audit</b><span>Usability of existing sites</span></li>
+        </ul></div>
+        <div><h4><span>2</span>Analysis</h4><ul>
+          <li><b>Component gap analysis</b><span>What each site built twice</span></li>
+          <li><b>Competitor benchmarking</b><span>Scored against industry peers</span></li>
+          <li><b>Site performance review</b><span>Traffic, entry and CTA data</span></li>
+        </ul></div>
+        <div><h4><span>3</span>Mapping</h4><ul>
+          <li><b>Content mapping</b><span>Keep, cut, merge, upcycle</span></li>
+          <li><b>Wireframe mapping</b><span>Templates per journey</span></li>
+          <li><b>Site mapping</b><span>One IA for B2B and B2C</span></li>
+        </ul></div>
+        <div><h4><span>4</span>Validation</h4><ul>
+          <li><b>Sitemap workshop</b><span>BU owners sign off the IA</span></li>
+          <li><b>Tree testing</b><span>Can users find it without the UI?</span></li>
+        </ul></div>
+      </div>
+
+      <div class="two" style="margin-top:36px">
+        <div>
+          <h4 style="font-size:20px;margin-bottom:10px">How the stakeholder interviews ran</h4>
+          <p class="prose small" style="font-size:16px">We interviewed 23 stakeholders from 11 groups, including Mobility Solutions, B2C brand marketing, consumer product, content, digital media, Canada, channel partner marketing, Motorcycle, and Bandag partner and channel marketing. Each conversation followed the same guide so the answers could be compared across BUs:</p>
+          <ol class="small" style="padding-left:20px;margin:12px 0 0;display:grid;gap:6px;font-size:15px">
+            <li>Business goals, revenue and market share for the BU</li>
+            <li>Who the customer is and how they buy (online, dealer, sales rep)</li>
+            <li>The role the website plays in that path to purchase</li>
+            <li>KPIs the site is judged on today</li>
+            <li>Biggest frustrations with the current site and tools</li>
+          </ol>
+          <p class="small muted" style="margin-top:12px">Notes went into a shared synthesis board, one column per BU and one row per theme, so differences between segments were visible side by side.</p>
+        </div>
+        <div>
+          <h4 style="font-size:20px;margin-bottom:10px">What the business findings said</h4>
+          <div class="notes">
+            <div class="note"><span class="pin good">A</span><div><b>BUs perform very differently</b><span>Revenue, share and growth vary widely, so one-size prioritization would fail.</span></div></div>
+            <div class="note"><span class="pin good">B</span><div><b>Markets sit at different maturity stages</b><span>Each segment needs its own marketing and experience tactics.</span></div></div>
+            <div class="note"><span class="pin good">C</span><div><b>Paths to purchase differ</b><span>The digital channel plays a different role in each one.</span></div></div>
+            <div class="note"><span class="pin good">D</span><div><b>Relationships drive B2B buying</b><span>Channel choice, sales org and dealer ties depend on Bridgestone vs. Firestone brand affinity.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Personas</span><h3>Three archetypes from audience research and interviews</h3></div>
+      <div class="three">
+        <div class="card persona">
+          <div class="who"><div class="avatar">DR</div><div><b>The Everyday Driver</b><span>B2C · Bridgestone &amp; Canada sites</span></div></div>
+          <dl>
+            <dt>Goal</dt><dd>Get the right tires at a fair price from a dealer nearby, this week.</dd>
+            <dt>Behavior</dt><dd>Starts with a dealer search or a promotion. Researches the product second.</dd>
+            <dt>Friction</dt><dd>Spec jargon (225/65R17, load index, UTQG) with no plain answer to "is this right for my car?"</dd>
+          </dl>
+          <p class="q">"I don't care what a speed rating is. Tell me if it fits and where I can get it."</p>
+        </div>
+        <div class="card persona">
+          <div class="who"><div class="avatar">FM</div><div><b>The Fleet Operator</b><span>B2B · Commercial &amp; Bandag</span></div></div>
+          <dl>
+            <dt>Goal</dt><dd>Keep trucks running and lower cost per mile with new tires and retreads.</dd>
+            <dt>Behavior</dt><dd>Leans on a sales rep and a dealer network. Uses the site to find service locations and program details.</dd>
+            <dt>Friction</dt><dd>Commercial tires and retreads live on separate brand sites with separate navigation.</dd>
+          </dl>
+          <p class="q">"Downtime is what costs me. I need a service location and a person, fast."</p>
+        </div>
+        <div class="card persona">
+          <div class="who"><div class="avatar">MR</div><div><b>The Rider</b><span>B2C · Motorcycle</span></div></div>
+          <dl>
+            <dt>Goal</dt><dd>Understand performance trade-offs before committing to a tire.</dd>
+            <dt>Behavior</dt><dd>Research-heavy and loyal. Stays longest of any audience, reading guides and comparisons.</dd>
+            <dt>Friction</dt><dd>Education content is hard to reach from product pages and the reverse.</dd>
+          </dl>
+          <p class="q">"I'll read everything. Just let me compare without losing my place."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Insights</span><h3>Site traffic showed why people arrive</h3></div>
+      <div class="two">
+        <div>
+          <p class="callout">Across every BU site, visitors arrive for the same three things: <b>dealer locations</b>, <b>promotions</b>, and <b>informational and education content</b>. Product research matters, but intent starts with these three.</p>
+          <div class="notes" style="margin-top:24px">
+            <div class="note"><span class="pin good">1</span><div><b>The consumer tire site is the main front door</b><span>It is the primary entry funnel across the whole portfolio.</span></div></div>
+            <div class="note"><span class="pin good">2</span><div><b>Riders stay longest on Motorcycle</b><span>Deep content works there and should be protected.</span></div></div>
+            <div class="note"><span class="pin good">3</span><div><b>Bandag's CTAs convert best</b><span>Its calls to action move traffic to conversion pages most effectively, so it became the pattern to reuse.</span></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h4>Prioritization model by business unit</h4>
+          <p class="small" style="margin-bottom:16px">Each BU scored on five dimensions: business value, site traffic, CX debt, time criticality and effort to achieve. The aggregate pointed to an even spread of investment, with one outlier.</p>
+          <div class="bars" role="img" aria-label="Aggregate prioritization score by business unit: Bridgestone USA B2C 18, Bandag 18, Bridgestone Canada 17, Motorcycle 15, Commercial 8">
+            <div class="bar-row"><span>Bridgestone USA B2C</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><b>18</b></div>
+            <div class="bar-row"><span>Bandag</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><b>18</b></div>
+            <div class="bar-row"><span>Bridgestone Canada</span><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><b>17</b></div>
+            <div class="bar-row"><span>Motorcycle</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><b>15</b></div>
+            <div class="bar-row low"><span>Commercial (GCR)</span><div class="bar-track"><div class="bar-fill" style="width:40%"></div></div><b>8</b></div>
+            <div class="axis"><span></span><div><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span></div><span></span></div>
+          </div>
+        </div>
+      </div>
+      <h4 style="font-size:20px;margin:36px 0 14px">Content matrix: every one of 1K+ pages got a verdict</h4>
+      <div class="matrix">
+        <div><b>Keep</b><p>High-traffic, accurate pages that already serve a top task.</p></div>
+        <div><b>Cut</b><p>Low-traffic, outdated or duplicated pages. Redirected, not deleted blindly.</p></div>
+        <div><b>Merge</b><p>The same topic written by several BUs, combined into one source.</p></div>
+        <div><b>Upcycle</b><p>Useful content in a weak format, rebuilt in the new page templates.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Wireframes</span><h3>Before and after, annotated</h3></div>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Screen">
+          <button type="button" data-bs-screen="home" aria-pressed="true">Homepage</button>
+          <button type="button" data-bs-screen="pdp" aria-pressed="false">Tire detail</button>
+          <button type="button" data-bs-screen="fleet" aria-pressed="false">Fleet hub</button>
+        </div>
+        <div class="seg" role="group" aria-label="Version">
+          <button type="button" data-bs-ver="before" aria-pressed="false">Before</button>
+          <button type="button" data-bs-ver="after" aria-pressed="true">After</button>
+        </div>
+      </div>
+
+      <!-- HOME BEFORE -->
+      <div class="wf-stage" data-bs="home-before" hidden>
+        <div>
+          <span class="state-label before">Before · brand-first</span>
+          <div class="wf-frame">
+            <div class="wf-chrome"><i></i><i></i><i></i><span>bridgestonetire.com</span></div>
+            <div class="wf-body">
+              <div class="wf-row" style="justify-content:space-between;position:relative">
+                <div class="wf-box wf-dark">LOGO</div>
+                <div class="wf-row"><span class="wf-chip">Passenger</span><span class="wf-chip">Motorcycle ↗</span><span class="wf-chip">Commercial ↗</span><span class="wf-chip">Bandag ↗</span><span class="wf-chip">Canada ↗</span></div>
+                <span class="pin" style="right:-6px;top:-10px">1</span>
+              </div>
+              <div class="wf-img" style="min-height:170px;position:relative"><span>Brand hero carousel · 4 slides</span><span class="pin" style="right:10px;top:10px">2</span></div>
+              <div class="wf-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div class="wf-img" style="min-height:56px"><span>Category</span></div><div class="wf-img" style="min-height:56px"><span>Category</span></div><div class="wf-img" style="min-height:56px"><span>Category</span></div><div class="wf-img" style="min-height:56px"><span>Category</span></div>
+              </div>
+              <div class="wf-line" style="width:70%"></div><div class="wf-line" style="width:50%"></div>
+              <div class="wf-row wf-fill" style="padding:8px;border-radius:6px;justify-content:space-between;position:relative">
+                <span class="wf-t">Footer · About · Careers · <u>Find a dealer</u> · Offers</span>
+                <span class="pin" style="right:8px;top:-12px">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><span class="pin">1</span><div><b>Navigation mirrors the org chart</b><span>Four of five links leave the site. Users must know which BU sells what they need.</span></div></div>
+          <div class="note"><span class="pin">2</span><div><b>The fold is spent on a carousel</b><span>Brand storytelling takes the space where top tasks should be.</span></div></div>
+          <div class="note"><span class="pin">3</span><div><b>Top tasks are hidden</b><span>Dealer locator and offers, the two biggest reasons to visit, sit in the footer.</span></div></div>
+        </div>
+      </div>
+      <!-- HOME AFTER -->
+      <div class="wf-stage" data-bs="home-after">
+        <div>
+          <span class="state-label after">After · intent-first</span>
+          <div class="wf-frame">
+            <div class="wf-chrome"><i></i><i></i><i></i><span>bridgestone · unified DXP</span></div>
+            <div class="wf-body">
+              <div class="wf-row" style="justify-content:space-between;position:relative">
+                <div class="wf-box wf-dark">LOGO</div>
+                <div class="wf-row" style="border:1.5px solid var(--wf-line);border-radius:99px;padding:2px;gap:2px"><span class="wf-chip" style="background:var(--ink);color:var(--paper);border-color:var(--ink)">Drivers &amp; riders</span><span class="wf-chip" style="border:0">Fleet &amp; commercial</span></div>
+                <div class="wf-input" style="max-width:150px;flex:none">Search tires, guides…</div>
+                <span class="pin good" style="left:44%;top:-12px">1</span>
+              </div>
+              <div class="wf-h">Find tires, a dealer, or a deal</div>
+              <div class="wf-grid" style="grid-template-columns:repeat(3,1fr);position:relative">
+                <div class="wf-box" style="display:grid;gap:6px"><b class="wf-t">Find a dealer</b><div class="wf-input">ZIP 78704</div><span class="wf-btn primary">Show 12 nearby</span></div>
+                <div class="wf-box" style="display:grid;gap:6px"><b class="wf-t">Current offers</b><div class="wf-line"></div><div class="wf-line" style="width:70%"></div><span class="wf-btn">2 active rebates</span></div>
+                <div class="wf-box" style="display:grid;gap:6px"><b class="wf-t">Tire guides</b><div class="wf-line"></div><div class="wf-line" style="width:60%"></div><span class="wf-btn">How to choose</span></div>
+                <span class="pin good" style="right:-8px;top:-10px">2</span>
+              </div>
+              <div class="wf-box wf-fill" style="display:grid;gap:8px;position:relative">
+                <div class="wf-row"><span class="wf-chip" style="background:var(--ink);color:var(--paper)">By vehicle</span><span class="wf-chip">By size</span><span class="wf-chip">By plate</span></div>
+                <div class="wf-row"><div class="wf-input">Year</div><div class="wf-input">Make</div><div class="wf-input">Model</div><span class="wf-btn primary">Find my fit</span></div>
+                <span class="pin good" style="right:8px;top:-12px">3</span>
+              </div>
+              <div class="wf-grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="wf-img" style="min-height:52px"><span>Brand story</span></div><div class="wf-img" style="min-height:52px"><span>Motorcycle</span></div><div class="wf-img" style="min-height:52px"><span>Bandag</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><span class="pin good">1</span><div><b>One site, two audiences</b><span>An audience switch replaces five brand exits. Fleet buyers reach their hub in one click.</span></div></div>
+          <div class="note"><span class="pin good">2</span><div><b>The three entry intents lead</b><span>Dealer, offers and guides match the top-of-funnel traffic data exactly.</span></div></div>
+          <div class="note"><span class="pin good">3</span><div><b>Fit-first tire finder</b><span>Search by the car you drive. Size and plate lookup are there for those who know.</span></div></div>
+        </div>
+      </div>
+
+      <!-- PDP BEFORE -->
+      <div class="wf-stage" data-bs="pdp-before" hidden>
+        <div>
+          <span class="state-label before">Before · spec sheet</span>
+          <div class="wf-frame">
+            <div class="wf-chrome"><i></i><i></i><i></i><span>/tires/all-season-touring</span></div>
+            <div class="wf-body">
+              <div class="wf-grid" style="grid-template-columns:1fr 1.4fr">
+                <div class="wf-img" style="min-height:180px"><span>Tire image</span></div>
+                <div class="wf-grid" style="align-content:start">
+                  <div class="wf-h">Touring All-Season</div>
+                  <div class="wf-box" style="display:grid;gap:4px;position:relative">
+                    <span class="wf-t">UTQG ............ 700 A A</span>
+                    <span class="wf-t">Load index ........ 102</span>
+                    <span class="wf-t">Speed rating .......... H</span>
+                    <span class="wf-t">Sidewall ......... BSW</span>
+                    <span class="wf-t">Sizes ......... 48 options ▾</span>
+                    <span class="pin" style="right:-8px;top:-10px">1</span>
+                  </div>
+                  <div class="wf-row" style="position:relative"><span class="wf-btn">Compare</span><span class="wf-btn">Brochure PDF</span><span class="pin" style="right:-8px;top:-10px">2</span></div>
+                </div>
+              </div>
+              <div class="wf-line"></div><div class="wf-line" style="width:80%"></div><div class="wf-line" style="width:60%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><span class="pin">1</span><div><b>Specs without meaning</b><span>Correct data, but a driver can't tell whether it fits their car or their driving.</span></div></div>
+          <div class="note"><span class="pin">2</span><div><b>No next step</b><span>The page ends in a PDF. Nothing moves the shopper toward a dealer or price.</span></div></div>
+        </div>
+      </div>
+      <!-- PDP AFTER -->
+      <div class="wf-stage" data-bs="pdp-after" hidden>
+        <div>
+          <span class="state-label after">After · plain-language fit</span>
+          <div class="wf-frame">
+            <div class="wf-chrome"><i></i><i></i><i></i><span>/tires/all-season-touring?vehicle=2021-rav4</span></div>
+            <div class="wf-body">
+              <div class="wf-grid" style="grid-template-columns:1fr 1.4fr">
+                <div class="wf-img" style="min-height:200px"><span>Tire image</span></div>
+                <div class="wf-grid" style="align-content:start">
+                  <div class="wf-row" style="position:relative"><span class="wf-chip" style="background:var(--ok-soft);color:var(--ok);border-color:var(--ok)">✓ Fits your 2021 RAV4</span><span class="pin good" style="right:-8px;top:-10px">1</span></div>
+                  <div class="wf-h">Touring All-Season</div>
+                  <span class="wf-t"><b>Best for:</b> quiet, comfortable highway driving</span>
+                  <div class="wf-row" style="position:relative"><span class="wf-chip">65,000-mile warranty</span><span class="wf-chip">All-season grip</span><span class="wf-chip">Low road noise</span><span class="pin good" style="right:-8px;top:-10px">2</span></div>
+                  <div class="wf-box wf-fill"><span class="wf-t">Show full specs ▾</span></div>
+                  <div class="wf-row" style="position:relative"><span class="wf-btn primary">Check price at a dealer near 78704</span><span class="wf-btn">Save</span><span class="pin good" style="right:-8px;top:-10px">3</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><span class="pin good">1</span><div><b>Answer the real question first</b><span>Carried over from the tire finder: does it fit my vehicle?</span></div></div>
+          <div class="note"><span class="pin good">2</span><div><b>Specs translated into benefits</b><span>Mileage, grip and noise in everyday words. Full specs stay one tap away for experts.</span></div></div>
+          <div class="note"><span class="pin good">3</span><div><b>One clear next step</b><span>The primary CTA hands off to a nearby dealer, the conversion that matters.</span></div></div>
+        </div>
+      </div>
+
+      <!-- FLEET BEFORE -->
+      <div class="wf-stage" data-bs="fleet-before" hidden>
+        <div>
+          <span class="state-label before">Before · two brand sites</span>
+          <div class="wf-grid" style="grid-template-columns:1fr 1fr">
+            <div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i><span>commercial site</span></div>
+              <div class="wf-body" style="min-height:300px">
+                <div class="wf-box wf-dark">COMMERCIAL NAV</div>
+                <div class="wf-img" style="min-height:90px"><span>Truck hero</span></div>
+                <span class="wf-t">Truck · Ag · OTR catalogs</span>
+                <div class="wf-line"></div><div class="wf-line" style="width:60%"></div>
+                <div class="wf-box" style="position:relative"><span class="wf-t">Dealer locator (commercial)</span><span class="pin" style="right:-8px;top:-10px">1</span></div>
+              </div></div>
+            <div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i><span>bandag site</span></div>
+              <div class="wf-body" style="min-height:300px">
+                <div class="wf-box wf-dark">BANDAG NAV</div>
+                <div class="wf-img" style="min-height:90px"><span>Retread hero</span></div>
+                <span class="wf-t">Retread programs</span>
+                <div class="wf-line"></div><div class="wf-line" style="width:60%"></div>
+                <div class="wf-box" style="position:relative"><span class="wf-t">Find a Bandag dealer</span><span class="pin" style="right:-8px;top:-10px">2</span></div>
+              </div></div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><span class="pin">1</span><div><b>Separate locators, separate logins</b><span>New tires and retreads are one buying decision for a fleet, split across two sites.</span></div></div>
+          <div class="note"><span class="pin">2</span><div><b>The best CTA pattern is stranded</b><span>Bandag's high-converting CTAs only help Bandag traffic.</span></div></div>
+        </div>
+      </div>
+      <!-- FLEET AFTER -->
+      <div class="wf-stage" data-bs="fleet-after" hidden>
+        <div>
+          <span class="state-label after">After · one fleet hub</span>
+          <div class="wf-frame">
+            <div class="wf-chrome"><i></i><i></i><i></i><span>/fleet</span></div>
+            <div class="wf-body">
+              <div class="wf-row" style="justify-content:space-between"><div class="wf-box wf-dark">LOGO</div><div class="wf-row" style="border:1.5px solid var(--wf-line);border-radius:99px;padding:2px;gap:2px"><span class="wf-chip" style="border:0">Drivers &amp; riders</span><span class="wf-chip" style="background:var(--ink);color:var(--paper);border-color:var(--ink)">Fleet &amp; commercial</span></div></div>
+              <div class="wf-h">Keep your fleet moving</div>
+              <div class="wf-grid" style="grid-template-columns:repeat(3,1fr);position:relative">
+                <div class="wf-box" style="display:grid;gap:6px"><b class="wf-t">By application</b><div class="wf-row"><span class="wf-chip">Truck</span><span class="wf-chip">Ag</span><span class="wf-chip">OTR</span></div></div>
+                <div class="wf-box" style="display:grid;gap:6px"><b class="wf-t">Retread programs</b><div class="wf-line"></div><span class="wf-btn">Compare cost per mile</span></div>
+                <div class="wf-box" style="display:grid;gap:6px"><b class="wf-t">Service locations</b><div class="wf-input">Route or ZIP</div></div>
+                <span class="pin good" style="right:-8px;top:-10px">1</span>
+              </div>
+              <div class="wf-box wf-fill" style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;position:relative">
+                <span class="wf-t"><b>Talk to a fleet specialist</b> · response within one business day</span><span class="wf-btn primary">Request a call</span>
+                <span class="pin good" style="right:8px;top:-12px">2</span>
+              </div>
+              <div class="wf-grid" style="grid-template-columns:1fr 1fr">
+                <div class="wf-img" style="min-height:60px"><span>Case study</span></div><div class="wf-img" style="min-height:60px"><span>Fleet guide</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="notes">
+          <div class="note"><span class="pin good">1</span><div><b>Organized by job, not brand</b><span>New tires, retreads and service locations sit together, the way fleets actually buy.</span></div></div>
+          <div class="note"><span class="pin good">2</span><div><b>A person, one click away</b><span>B2B buying runs on relationships, so the rep handoff is a first-class CTA, reusing Bandag's pattern.</span></div></div>
+        </div>
+      </div>
+
+      <h4 style="font-size:20px;margin:48px 0 6px">Mobile-first: finding a dealer on the go</h4>
+      <p class="muted small" style="margin-bottom:18px">Dealer search is the top entry task, and much of it happens on a phone near the car. Three screens, no account required.</p>
+      <div class="phones">
+        <div>
+          <div class="phone"><div class="notch"></div><div class="wf-body">
+            <div class="wf-row" style="justify-content:space-between"><div class="wf-box wf-dark">LOGO</div><span class="wf-t">☰</span></div>
+            <div class="wf-h" style="font-size:16px">Find a dealer near you</div>
+            <span class="wf-btn primary" style="text-align:center">◎ Use my location</span>
+            <span class="wf-t muted" style="text-align:center">or</span>
+            <div class="wf-input" style="flex:none">ZIP or city</div>
+            <span class="wf-t"><b>Filter</b></span>
+            <div class="wf-row"><span class="wf-chip">Open now</span><span class="wf-chip">Alignment</span><span class="wf-chip">Has my tire</span></div>
+            <div class="wf-img" style="min-height:120px"><span>Map</span></div>
+          </div></div>
+          <p class="phone-cap"><b>01</b>Location first. Typing is the fallback, not the default.</p>
+        </div>
+        <div>
+          <div class="phone"><div class="notch"></div><div class="wf-body">
+            <span class="wf-t">← 12 dealers near 78704</span>
+            <div class="wf-box" style="display:grid;gap:4px"><b class="wf-t">South Lamar Tire &amp; Auto</b><span class="wf-t muted">1.2 mi · Open until 6 pm</span><div class="wf-row"><span class="wf-chip">Has your tire</span></div><div class="wf-row"><span class="wf-btn primary">Request time</span><span class="wf-btn">Call</span></div></div>
+            <div class="wf-box" style="display:grid;gap:4px"><b class="wf-t">Oltorf Service Center</b><span class="wf-t muted">2.8 mi · Open until 7 pm</span><div class="wf-row"><span class="wf-btn primary">Request time</span><span class="wf-btn">Call</span></div></div>
+            <div class="wf-box" style="display:grid;gap:4px"><b class="wf-t">Ben White Tire</b><span class="wf-t muted">3.4 mi · Closed</span><div class="wf-row"><span class="wf-btn">Directions</span></div></div>
+          </div></div>
+          <p class="phone-cap"><b>02</b>Distance, hours and stock on the card. Actions sized for thumbs.</p>
+        </div>
+        <div>
+          <div class="phone"><div class="notch"></div><div class="wf-body">
+            <span class="wf-t">← South Lamar Tire &amp; Auto</span>
+            <div class="wf-h" style="font-size:16px">Pick a time</div>
+            <div class="wf-row"><span class="wf-chip" style="background:var(--ink);color:var(--paper)">Today</span><span class="wf-chip">Tue</span><span class="wf-chip">Wed</span></div>
+            <div class="wf-grid" style="grid-template-columns:1fr 1fr"><span class="wf-btn">9:00</span><span class="wf-btn primary">11:30</span><span class="wf-btn">1:00</span><span class="wf-btn">3:30</span></div>
+            <div class="wf-input" style="flex:none">Phone for confirmation</div>
+            <div class="wf-box wf-fill"><span class="wf-t">Touring All-Season · 4 tires<br>Offer applied: $70 rebate</span></div>
+            <span class="wf-btn primary" style="text-align:center">Send request to dealer</span>
+          </div></div>
+          <p class="phone-cap"><b>03</b>The tire and offer carry through, so nothing is re-entered.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Solution</span><h3>Four product moves, sequenced</h3></div>
+      <div class="four">
+        <div class="card"><h4>1 · Consolidate the platform</h4><p>Migrated the fragmented B2B and B2C sites onto one scalable digital platform, retiring redundant infrastructure and workflows.</p></div>
+        <div class="card"><h4>2 · Unify the data</h4><p>Brought product catalogs, tire specs and dealer data into shared sources, so every brand and region shows the same accurate information.</p></div>
+        <div class="card"><h4>3 · Go mobile-first</h4><p>Rebuilt tire discovery, dealer locator and fleet journeys around mobile responsiveness, progressive disclosure and faster loads.</p></div>
+        <div class="card"><h4>4 · Align the teams</h4><p>Standardized requirements, PRDs and release readiness across product, UX, engineering and regional marketing.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Decisions</span><h3>Product decisions and their trade-offs</h3></div>
+      <div class="decisions">
+        <div class="decision">
+          <h4>Platform first, redesign second</h4>
+          <div><div class="lbl">Why</div><p>Redesigning seven sites on seven stacks would have multiplied the problem. Consolidating first meant every later UX improvement shipped once for every brand.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Customers saw visible change later than a cosmetic refresh would have delivered. I phased the migration so high-traffic journeys moved first.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Fix the data before the screens</h4>
+          <div><div class="lbl">Why</div><p>The gap analysis showed each BU maintaining its own catalog, specs and dealer data, and they disagreed. A redesigned tire finder on bad data would still give wrong answers, so shared data sources came before the new journeys.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Data clean-up work that customers never see, ahead of visible features. I tied it to the dealer locator and tire finder launches so the value was clear.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Prioritize journeys from traffic data</h4>
+          <div><div class="lbl">Why</div><p>Across all BU sites, visitors arrived for dealers, promotions and education. Those journeys went first on the roadmap and lead the new entry experience.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Brand storytelling moved below the fold. Dedicated brand modules kept a stage for marketing, and we tested that users could still reach them.</p></div>
+        </div>
+        <div class="decision">
+          <h4>One IA with an audience switch</h4>
+          <div><div class="lbl">Why</div><p>Separate B2B and B2C sites would rebuild the silos. A single IA with a Drivers / Fleet switch shares content, data and page templates while keeping journeys distinct.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Harder IA governance across BUs. We de-risked it with a sitemap validation workshop with BU owners and tree testing with users before any visual design.</p></div>
+        </div>
+        <div class="decision">
+          <h4>One intake process for every BU</h4>
+          <div><div class="lbl">Why</div><p>Regional BUs still needed to ship local features. A shared intake and prioritization process across 8+ teams let them do that without breaking the global platform.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>More process for teams used to shipping alone. Published intake rules and a regular cross-BU review kept requests moving.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Spread investment evenly across BUs</h4>
+          <div><div class="lbl">Why</div><p>The five-dimension prioritization model showed four BUs scoring close together. A shared-platform roadmap served all of them instead of the loudest one.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>No single BU got a fully bespoke launch first. The model gave stakeholders a transparent, defensible reason.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Impact</span><h3>Program outcomes</h3></div>
+      <p class="eyebrow" style="margin-bottom:10px">Customer experience</p>
+      <div class="impact">
+        <div><div class="stat tnum">+35%</div><div class="stat-label">user engagement across consumer and commercial journeys</div></div>
+        <div><div class="stat tnum">+23%</div><div class="stat-label">conversion lift from a cohesive, mobile-first experience</div></div>
+        <div><div class="stat tnum">7 → 1</div><div class="stat-label">brand experiences unified, with each brand and BU keeping its own identity</div></div>
+        <div><div class="stat" style="font-size:30px">Mobile-first</div><div class="stat-label">tire discovery, dealer locator and fleet flows, with better accessibility and load speed</div></div>
+      </div>
+      <p class="eyebrow" style="margin:24px 0 10px">Engineering and delivery</p>
+      <div class="impact">
+        <div><div class="stat tnum">+35%</div><div class="stat-label">development velocity from consolidating onto one platform</div></div>
+        <div><div class="stat tnum">+20%</div><div class="stat-label">faster time-to-market</div></div>
+        <div><div class="stat tnum">−50%</div><div class="stat-label">team rework through standardized PRDs and UAT governance</div></div>
+        <div><div class="stat tnum">15→5%</div><div class="stat-label">post-launch defect rate</div></div>
+      </div>
+      <p class="eyebrow" style="margin:24px 0 10px">Data, platform and governance</p>
+      <div class="three">
+        <div class="card"><h4>Duplicate stacks retired</h4><p>Redundant tech stacks and cloud deployments decommissioned across 7 brands and 8+ teams, cutting maintenance and licensing overhead.</p></div>
+        <div class="card"><h4>One source of product data</h4><p>Product, tire spec and regional data unified, so customers and internal teams see the same accurate information.</p></div>
+        <div class="card"><h4>+25% operational efficiency</h4><p>Cross-BU backlog prioritization and one intake process let regions ship local features safely.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 KUMIKO ============================ -->
+<section class="case" id="kumiko">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="big">02</div>
+      <h2>Kumiko Design System</h2>
+      <p class="sub">Bridgestone's multi-brand house design system, built from the ground up and adopted across 14 teams. Named for the Japanese woodworking craft where precise pieces interlock without nails or glue, it unifies UI design, accessibility and brand experiences across websites, e-commerce, mobile apps and portals.</p>
+    </div>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Product Manager · 0 to 1 build and adoption</dd></div>
+      <div><dt>Focus</dt><dd>Multi-brand theming · WCAG accessibility · design-to-code parity</dd></div>
+      <div><dt>Stack</dt><dd>Figma library · Storybook · CMS components</dd></div>
+      <div><dt>Live</dt><dd><a href="https://kumiko.bridgestone.com/">kumiko.bridgestone.com</a></dd></div>
+    </dl>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Problem</span><h3>Every team was rebuilding the same button</h3></div>
+      <div class="two">
+        <p class="prose">Bridgestone's brands, BUs and regions shipped in parallel with no shared foundation. The same components existed in several versions, each with its own spacing, colors and states. Figma files and production code drifted apart. Accessibility was checked late in QA, if at all. Every new brand or region meant another copy of everything. There was no house system to start from, so we built one from the ground up.</p>
+        <div class="card">
+          <h4>What I owned as PM, end to end</h4>
+          <ul>
+            <li><b>Vision:</b> set the vision and aligned teams around it</li>
+            <li><b>Backlog:</b> feature descriptions, PRDs and prioritization in Jira</li>
+            <li><b>UX:</b> design inputs, supervision of UX work, and prototyping</li>
+            <li><b>Governance:</b> governance documentation, contribution model and versioning</li>
+            <li><b>Delivery:</b> sprint planning, UAT and releases with design and engineering</li>
+            <li><b>Adoption:</b> rollout and adoption across 14 teams, with stakeholder communication throughout</li>
+            <li><b>Maintenance:</b> ongoing upkeep, deprecations and release notes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Vision</span><h3>One source of truth for every Bridgestone experience</h3></div>
+      <div class="two">
+        <p class="callout" style="font-size:20px">Empower Bridgestone through a single-source-of-truth enterprise UI design system that enables consistent, efficient design and development of Bridgestone experiences across the globe: websites, digital products, mobile apps, e-commerce platforms and portals.</p>
+        <div class="card">
+          <h4>KPIs we measured success by</h4>
+          <div class="comp" style="margin-top:10px">
+            <span class="tag">Time efficiency</span><span class="tag">Cost savings</span><span class="tag">Speed to market</span><span class="tag">Brand consistency</span><span class="tag">Innovation</span><span class="tag">Collaboration</span>
+          </div>
+          <p style="margin-top:12px">Each release was judged on whether teams built faster and cheaper, shipped sooner, stayed on brand, had room to try new ideas, and worked together more.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Research</span><h3>Inventory first, then interviews</h3></div>
+      <div class="three">
+        <div class="card"><h4>UI inventory</h4><p>Screenshotted every live pattern across products and grouped them: buttons, inputs, tables, alerts, cards, navigation. Duplicates became obvious when they sat on one board.</p></div>
+        <div class="card"><h4>Component gap analysis</h4><p>Scored each pattern on usage, inconsistency and accessibility risk. High-use, high-drift components went first.</p></div>
+        <div class="card"><h4>Maker interviews</h4><p>Talked with designers, front-end engineers and PMs about how they find, build and change components today, and what would make them trust a shared one.</p></div>
+      </div>
+      <div class="two" style="margin-top:24px">
+        <div class="card persona">
+          <div class="who"><div class="avatar">PD</div><div><b>The Product Designer</b><span>Consumer of the Figma library</span></div></div>
+          <dl><dt>Needs</dt><dd>Components that match production exactly, with documented states and usage rules.</dd><dt>Fear</dt><dd>A system so rigid it blocks new ideas.</dd></dl>
+          <p class="q">"If the Figma version lies about how it behaves in code, I stop using it."</p>
+        </div>
+        <div class="card persona">
+          <div class="who"><div class="avatar">FE</div><div><b>The Front-End Engineer</b><span>Consumer of Storybook and packages</span></div></div>
+          <dl><dt>Needs</dt><dd>Small, composable components with predictable props and versioned releases.</dd><dt>Fear</dt><dd>Breaking changes landing without warning.</dd></dl>
+          <p class="q">"Give me a changelog and semver and I'll adopt it tomorrow."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Principles</span><h3>Four principles every decision was tested against</h3></div>
+      <div class="four">
+        <div class="card"><h4>Foundation first, features second</h4><p>Invest deeply in tokens, grids, typography and core controls. Trim one-off custom features so teams build on a solid base.</p></div>
+        <div class="card"><h4>Guidance over control</h4><p>Clear documentation lets designers and developers adopt and co-create on their own, without rigid gatekeeping.</p></div>
+        <div class="card"><h4>Composability at scale</h4><p>Modular building blocks combine to meet regional or BU-specific needs without reinventing components.</p></div>
+        <div class="card"><h4>Inclusive by default</h4><p>WCAG accessibility, mobile-first responsive behavior and localization are built into every step of design and development.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Architecture</span><h3>Five layers, each built only from the one below</h3></div>
+      <div class="layers">
+        <div class="layer"><span class="mono">01</span><b>Tokens</b><span>Color, type, space, radius, motion as named values</span></div>
+        <div class="layer"><span class="mono">02</span><b>Elements</b><span>Text, icon, surface, focus ring</span></div>
+        <div class="layer"><span class="mono">03</span><b>Components</b><span>Button, input, alert, chip, table, card</span></div>
+        <div class="layer"><span class="mono">04</span><b>Patterns</b><span>Forms, filters, search, empty states</span></div>
+        <div class="layer"><span class="mono">05</span><b>Templates</b><span>Landing, listing, detail, dashboard pages</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Prototype</span><h3>Same components, three themes</h3></div>
+      <p class="muted" style="margin-bottom:16px;max-width:65ch">A sanitized demo of how multi-brand theming works. Switch the theme and density: the component code never changes, only the semantic tokens do. Colors here are illustrative, not Bridgestone's brand palette.</p>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Brand theme">
+          <button type="button" data-ds-brand="a" aria-pressed="true">Consumer theme</button>
+          <button type="button" data-ds-brand="b" aria-pressed="false">Commercial theme</button>
+          <button type="button" data-ds-brand="c" aria-pressed="false">Regional theme</button>
+        </div>
+        <div class="seg" role="group" aria-label="Density">
+          <button type="button" data-ds-density="comfortable" aria-pressed="true">Comfortable</button>
+          <button type="button" data-ds-density="compact" aria-pressed="false">Compact</button>
+        </div>
+      </div>
+      <div class="wf-stage">
+        <div class="ds" id="ds" data-brand="a" data-density="comfortable">
+          <div class="ds-row">
+            <button class="ds-btn" type="button">Find a dealer</button>
+            <button class="ds-btn sec" type="button">Compare</button>
+            <button class="ds-btn ghost" type="button">Learn more</button>
+            <span class="ds-chip">New</span><span class="ds-chip">In stock</span>
+          </div>
+          <div class="ds-row">
+            <div class="ds-field"><label for="ds-zip">ZIP code</label><input id="ds-zip" value="78704"><small>We use this to find dealers near you.</small></div>
+            <div class="ds-field err"><label for="ds-email">Work email</label><input id="ds-email" value="fleet@"><small>Enter a full email address, like name@company.com.</small></div>
+          </div>
+          <div class="ds-alert" role="status"><b>Heads up.</b> Two rebates apply to tires on this page.</div>
+          <div class="ds-row">
+            <div class="ds-card"><b>Retread program</b><span>Lower cost per mile on long-haul fleets.</span></div>
+            <div class="ds-card"><b>Service locations</b><span>1,200 commercial locations nationwide.</span></div>
+          </div>
+          <table class="ds-table">
+            <thead><tr><th>Location</th><th>Distance</th><th>Status</th></tr></thead>
+            <tbody><tr><td>South Lamar</td><td>1.2 mi</td><td><span class="ds-chip">Open</span></td></tr><tr><td>Oltorf</td><td>2.8 mi</td><td><span class="ds-chip">Open</span></td></tr></tbody>
+          </table>
+          <span class="ds-switch"><i></i>Email me offers</span>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:10px">Semantic tokens in use</p>
+          <div class="tokens" id="tokens"></div>
+          <p class="small muted" style="margin-top:14px">Components reference <span class="mono">color.action.primary</span>, never a hex value. A brand is a token file, so adding one takes a day, not a rebuild.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Decisions</span><h3>Choices that made it adoptable</h3></div>
+      <div class="decisions">
+        <div class="decision">
+          <h4>Semantic tokens over raw values</h4>
+          <div><div class="lbl">Why</div><p>Components point to roles like action.primary and surface.raised. Multi-brand theming and dark mode become a token swap instead of a fork.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>An extra layer of naming to learn. We published a token map in Storybook and Figma so every name links to its value and usage.</p></div>
+        </div>
+        <div class="decision">
+          <h4>One source of truth in Figma and Storybook</h4>
+          <div><div class="lbl">Why</div><p>Figma libraries are paired with documented, production-ready components in Storybook, closing the gap between design and engineering and ending redundant front-end coding across teams.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Keeping two libraries in step takes discipline. Parity checks became part of each component's definition of done.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Composition over configuration</h4>
+          <div><div class="lbl">Why</div><p>A card built from slots (media, title, body, actions) covers more cases than one card with thirty props, and stays easy to test.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Teams write a little more markup. Ready-made patterns cover the common combinations.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Accessibility as acceptance criteria</h4>
+          <div><div class="lbl">Why</div><p>Contrast ratios are checked when tokens are defined, and focus, keyboard and screen-reader behavior are part of each component's definition of done.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Some brand colors failed AA on white. We kept them for decoration and defined accessible action shades beside them.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Co-creation and federated governance</h4>
+          <div><div class="lbl">Why</div><p>Distributed teams across regions and tech stacks contribute back to the system while core UX patterns stay consistent. Teams extend locally, then propose upstream through intake, triage and review. Releases follow semantic versioning with a changelog.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Slower than letting anyone merge. Clear service levels for review kept teams from routing around the system.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Adoption</span><h3>A design system only counts if teams use it</h3></div>
+      <div class="three">
+        <div class="card"><h4>Start where it hurts most</h4><p>Launched with the highest-use, highest-drift components and a pilot team, so the first release removed real duplicate work.</p></div>
+        <div class="card"><h4>Make the right way the easy way</h4><p>Documented usage, states and code side by side in Figma and Storybook, so adopting a component took less effort than rebuilding it.</p></div>
+        <div class="card"><h4>Let teams give back</h4><p>An open contribution path turned early adopters into co-owners and grew adoption team by team to 14.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Impact</span><h3>What changed for the teams</h3></div>
+      <div class="four">
+        <div class="card"><h4>One source of truth</h4><p>Figma and Storybook describe the same component, so design and code stop drifting.</p></div>
+        <div class="card"><h4>Adopted across 14 teams</h4><p>Designers and engineers across brands, BUs and regions build from the same tested components instead of their own copies.</p></div>
+        <div class="card"><h4>Accessible by default</h4><p>Contrast and keyboard checks happen at the token and component level, before QA.</p></div>
+        <div class="card"><h4>Multi-brand by design</h4><p>A brand or regional theme is a token file on shared architecture, so a new brand starts from a working system.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 WORLDPAY ============================ -->
+<section class="case" id="worldpay">
+  <div class="wrap">
+    <div class="case-head">
+      <div class="big">03</div>
+      <h2>Worldpay Unified Pricing Console</h2>
+      <p class="sub">Bringing every merchant type, from every partner channel, under one roof: one console to build merchant pricing and calculate fees, merchant payouts and partner residuals at scale for 800,000+ merchants and 4,000 partners.</p>
+    </div>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Product Manager</dd></div>
+      <div><dt>Product</dt><dd>Internal merchant &amp; partner pricing platform</dd></div>
+      <div><dt>Scale</dt><dd>800K+ merchants · 4K partners · $500M+ volume</dd></div>
+      <div><dt>Collaborated with</dt><dd>Sales, finance &amp; accounting, customer success, engineering, QA, stakeholders</dd></div>
+    </dl>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Problem</span><h3>Pricing accuracy is revenue accuracy</h3></div>
+      <div class="two">
+        <div class="prose" style="display:grid;gap:14px">
+          <p>Worldpay served many merchant types arriving through many partners, and legacy acquisitions had left pricing spread across disconnected back-office and billing engines. Sales reps, ISO partners and operations teams configured interchange-plus rates, monthly fees and terminal charges in separate systems, much of it by hand.</p>
+          <p>The result was billing errors, misconfigured fee schedules, merchant disputes and slow, manual processes. Analysts re-keyed the same merchant on several screens, saw no preview of what the merchant would pay, and requested approvals by email. In merchant acquiring, billing errors are a major driver of churn.</p>
+        </div>
+        <div class="card">
+          <h4>What I owned as PM, end to end</h4>
+          <ul>
+            <li><b>Strategy and roadmap</b> for merchant pricing, billing, settlement and reconciliation</li>
+            <li><b>Discovery:</b> workflow audits, stakeholder interviews, funnel and support-ticket analysis</li>
+            <li><b>Definition:</b> Figma prototypes, epics, user stories and acceptance criteria</li>
+            <li><b>Rules:</b> margin and approval thresholds, co-owned with finance and pricing</li>
+            <li><b>Delivery:</b> backlog refinement, sprint planning, UAT, defect resolution and release readiness</li>
+            <li><b>Outcomes:</b> post-launch KPIs for accuracy, efficiency and adoption</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Goal</span><h3>What the unified console had to fix</h3></div>
+      <div class="three">
+        <div class="card"><h4>End fragmented rate setup</h4><p>One interface for sales, partners and operations to build and quote merchant pricing, in place of several legacy back-office systems.</p></div>
+        <div class="card"><h4>Cut billing and boarding errors</h4><p>Standard fee templates, with approved quotes synced straight into merchant boarding and billing instead of being re-keyed.</p></div>
+        <div class="card"><h4>Speed deals with governance</h4><p>Real-time margin thresholds and automated approvals that stop underpriced deals and speed merchant onboarding.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Research</span><h3>Mapping the quote-to-activation journey</h3></div>
+      <div class="three" style="margin-bottom:24px">
+        <div class="card"><h4>Workflow audits</h4><p>Sat with pricing analysts while they configured real merchants, counting screens, re-entered fields and side spreadsheets.</p></div>
+        <div class="card"><h4>Stakeholder interviews</h4><p>Pricing analysts, sales and relationship managers, finance and accounting, customer success and partner operations. Each owned a different part of the journey.</p></div>
+        <div class="card"><h4>Funnel analysis</h4><p>Traced pricing requests from quote to activation to find where they stalled and where manual entry errors entered.</p></div>
+      </div>
+      <div class="scroll-x">
+        <table class="journey">
+          <thead><tr><th></th><th>Quote</th><th>Configure</th><th>Approve</th><th>Activate</th><th>Bill &amp; pay out</th></tr></thead>
+          <tbody>
+            <tr><td>Who</td><td>Sales / RM</td><td>Pricing analyst</td><td>Pricing manager</td><td>Onboarding, POS</td><td>Billing, partner ops</td></tr>
+            <tr><td>Doing</td><td>Builds an offer in a spreadsheet</td><td>Re-enters rates across several screens</td><td>Reviews by email thread</td><td>Pricing pushed to POS and billing</td><td>Statements and residuals calculated</td></tr>
+            <tr><td>Pain</td><td>Can't see margin while quoting</td><td class="hot">Merchant ID and rates keyed again on every screen<br><span class="hot-tag">● stall + error point</span></td><td class="hot">No rules for what needs approval; requests sit for days<br><span class="hot-tag">● biggest stall</span></td><td>Errors found only after go-live</td><td>Wrong rates become billing errors and payout disputes</td></tr>
+            <tr><td>Opportunity</td><td>Live fee preview in the language sales uses</td><td>One guided builder with templates by MCC</td><td>Threshold-based auto-routing</td><td>Validate before submit</td><td>Versioned pricing for audit</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="three" style="margin-top:24px">
+        <div class="card persona">
+          <div class="who"><div class="avatar">PA</div><div><b>The Pricing Analyst</b><span>Primary user, all day</span></div></div>
+          <dl><dt>Goal</dt><dd>Configure accurate pricing for many merchants without re-keying.</dd><dt>Friction</dt><dd>Fragmented screens and errors discovered after submission.</dd></dl>
+        </div>
+        <div class="card persona">
+          <div class="who"><div class="avatar">RM</div><div><b>The Relationship Manager</b><span>Quotes and renewals</span></div></div>
+          <dl><dt>Goal</dt><dd>Send a competitive offer fast and know it will be approved.</dd><dt>Friction</dt><dd>No view of margin or approval rules while negotiating.</dd></dl>
+        </div>
+        <div class="card persona">
+          <div class="who"><div class="avatar">ISV</div><div><b>The Channel Partner</b><span>One of 4,000 ISVs and VARs</span></div></div>
+          <dl><dt>Goal</dt><dd>Be paid the right residual on every merchant they referred.</dd><dt>Friction</dt><dd>Payout errors erode trust in the partnership.</dd></dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Wireframes</span><h3>Five screens became one guided builder</h3></div>
+      <span class="state-label before">Before · legacy flow</span>
+      <div class="legacy">
+        <div><div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i></div><div class="wf-body"><span class="wf-t"><b>Merchant profile</b></span><div class="wf-input" style="flex:none;position:relative">MID ________<span class="pin" style="right:-8px;top:-10px">1</span></div><div class="wf-line"></div><div class="wf-line" style="width:60%"></div></div></div><div class="cap">Screen 1</div></div>
+        <div><div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i></div><div class="wf-body"><span class="wf-t"><b>Card rates</b></span><div class="wf-input" style="flex:none">MID ________</div><div class="wf-line"></div><div class="wf-line"></div><div class="wf-line" style="width:40%"></div></div></div><div class="cap">Screen 2</div></div>
+        <div><div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i></div><div class="wf-body"><span class="wf-t"><b>Fees</b></span><div class="wf-input" style="flex:none">MID ________</div><div class="wf-line"></div><div class="wf-line" style="width:70%"></div><div class="wf-box" style="position:relative">No preview<span class="pin" style="right:-8px;top:-10px">2</span></div></div></div><div class="cap">Screen 3</div></div>
+        <div><div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i></div><div class="wf-body"><span class="wf-t"><b>Partner splits</b></span><div class="wf-input" style="flex:none">MID ________</div><div class="wf-line"></div><div class="wf-line" style="width:50%"></div></div></div><div class="cap">Screen 4</div></div>
+        <div><div class="wf-frame"><div class="wf-chrome"><i></i><i></i><i></i><span>email</span></div><div class="wf-body"><span class="wf-t"><b>Approval request</b></span><div class="wf-line"></div><div class="wf-line"></div><div class="wf-box" style="position:relative">Reply to approve<span class="pin" style="right:-8px;top:-10px">3</span></div></div></div><div class="cap">Outside the system</div></div>
+      </div>
+      <div class="three" style="margin-top:18px">
+        <div class="note"><span class="pin">1</span><div><b>Re-keyed on every screen</b><span>The merchant ID and context were entered four times.</span></div></div>
+        <div class="note"><span class="pin">2</span><div><b>No view of the outcome</b><span>Analysts never saw what the merchant would pay per transaction.</span></div></div>
+        <div class="note"><span class="pin">3</span><div><b>Approvals by email</b><span>No rules, no audit trail, and the longest wait in the journey.</span></div></div>
+      </div>
+
+      <div style="margin-top:40px">
+        <span class="state-label after">After · guided builder</span>
+        <div class="wf-frame">
+          <div class="wf-chrome"><i></i><i></i><i></i><span>pricing console / new pricing</span></div>
+          <div class="wf-body" style="grid-template-columns:1.4fr 1fr;min-height:300px">
+            <div class="wf-grid" style="align-content:start">
+              <div class="wf-row" style="position:relative"><span class="wf-chip" style="background:var(--ink);color:var(--paper)">1 Merchant</span><span class="wf-chip">2 Rates</span><span class="wf-chip">3 Partner</span><span class="wf-chip">4 Review</span><span class="pin good" style="right:-8px;top:-10px">1</span></div>
+              <div class="wf-box wf-fill"><span class="wf-t">Template: Quick service (MCC 5814) applied</span></div>
+              <div class="wf-row"><div class="wf-input">Visa markup · 20 bps</div><div class="wf-input">MC · 20 bps</div></div>
+              <div class="wf-box" style="border-style:dashed;position:relative"><span class="wf-t">▸ Advanced fees (monthly, POS, PCI)</span><span class="pin good" style="right:-8px;top:-10px">2</span></div>
+              <div class="wf-row" style="justify-content:flex-end"><span class="wf-btn">Back</span><span class="wf-btn primary">Continue</span></div>
+            </div>
+            <div class="wf-box wf-fill" style="display:grid;gap:6px;align-content:start;position:relative">
+              <span class="wf-t"><b>Merchant pays on $100</b></span>
+              <span class="wf-t">Visa swipe ........ $1.83</span><span class="wf-t">Amex keyed ....... $2.10</span>
+              <div class="wf-line"></div>
+              <span class="wf-chip" style="justify-self:start">● Auto-approved</span>
+              <span class="pin good" style="right:-8px;top:-10px">3</span>
+            </div>
+          </div>
+        </div>
+        <div class="three" style="margin-top:18px">
+          <div class="note"><span class="pin good">1</span><div><b>One flow, four steps</b><span>Merchant context is entered once and carried through.</span></div></div>
+          <div class="note"><span class="pin good">2</span><div><b>Advanced fees tucked away</b><span>Standard setups stay short. Complex ones expand.</span></div></div>
+          <div class="note"><span class="pin good">3</span><div><b>Live preview and routing</b><span>The fee in dollars and the approval path update as you type.</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Prototype</span><h3>Try the pricing builder</h3></div>
+      <p class="muted" style="max-width:68ch;margin-bottom:18px">A working recreation of the Figma prototype. Change a markup below 18 bps to see approval routing, or below 10 bps to see the guardrail block submission. Rates are illustrative.</p>
+      <div class="proto" id="proto">
+        <div class="proto-main">
+          <div class="stepper" id="stepper" aria-label="Steps"></div>
+          <div id="step-body"></div>
+          <div class="proto-nav" id="proto-nav"></div>
+        </div>
+        <aside class="proto-side" aria-live="polite">
+          <div class="side-sec">
+            <p class="side-h">Merchant pays on a $100 sale</p>
+            <table class="fee-table" id="fee-table"></table>
+          </div>
+          <div class="side-sec">
+            <p class="side-h">Partner residual</p>
+            <p class="small" id="residual-line"></p>
+          </div>
+          <div class="side-sec">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><p class="side-h" style="margin:0">Approval</p><span id="status-pill"></span></div>
+            <ul class="route-list" id="route-list"></ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Decisions</span><h3>Design reasoning and trade-offs</h3></div>
+      <div class="decisions">
+        <div class="decision">
+          <h4>Progressive disclosure</h4>
+          <div><div class="lbl">Why</div><p>Most merchants fit a template by category. Advanced fee structures sit behind an expandable section, so standard setups stay fast and uncluttered.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Power users take one extra click for complex deals. The section shows a count of non-default fees so nothing is hidden by surprise.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Error prevention over correction</h4>
+          <div><div class="lbl">Why</div><p>Real-time margin guardrails stop invalid quotes before submission. Catching a below-floor markup in the form is far cheaper than a back-office rejection after go-live.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Hard blocks can frustrate sales on edge-case deals. Only below-cost pricing is blocked; anything else routes to a person for approval.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Rules-based approval routing</h4>
+          <div><div class="lbl">Why</div><p>Thresholds in the rules engine decide who must approve: pricing managers for low markups, partner ops for high residuals. Everything else is approved automatically with an audit trail.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>Thresholds need owners and regular review. Finance and pricing leads co-own them, and every rule is versioned.</p></div>
+        </div>
+        <div class="decision">
+          <h4>Show the fee in dollars</h4>
+          <div><div class="lbl">Why</div><p>Sales and merchants think in "what do I pay on a $100 sale", not basis points. The preview speaks that language and breaks out interchange, assessment and markup.</p></div>
+          <div><div class="lbl t">Trade-off</div><p>A preview can be mistaken for a quote. It is labeled as an estimate on a sample transaction.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Related launches</span><h3>Two problems the console surfaced, and what I shipped</h3></div>
+      <div class="two">
+        <article class="card story">
+          <p class="eyebrow">Partner payouts</p>
+          <h4 style="font-size:22px;margin:6px 0 12px">Payout transparency dashboard</h4>
+          <dl>
+            <dt>Situation</dt><dd>Partner support tickets and reconciliation disputes were rising. Partners couldn't see how payouts, fees and adjustments were calculated, and many reconciled by hand in Excel.</dd>
+            <dt>Research</dt><dd>Analyzed ticket themes, then interviewed partners and account managers. The gap was trust and visibility, not a missing report. Finance teams needed auditable detail; operations teams needed quick summaries and issue flags.</dd>
+            <dt>Making the case</dt><dd>Leadership favored work tied directly to revenue. I quantified ticket trends and the hours account managers spent pulling data, and framed it as a trust and retention risk across 4,000+ partners and $500M+ in volume. Real partner quotes made it tangible.</dd>
+            <dt>Lean MVP</dt><dd>Payout summaries, transaction-level drill-down and downloadable reports, reusing existing data pipelines with engineering. Validated with finance, support and account management, then rolled out to a subset of partners with tracked KPIs.</dd>
+            <dt>Result</dt><dd>Fewer support tickets and reconciliation disputes, ~20% better operational efficiency, and more partner self-service with less reliance on internal support.</dd>
+          </dl>
+        </article>
+        <article class="card story">
+          <p class="eyebrow">Merchant funding</p>
+          <h4 style="font-size:22px;margin:6px 0 12px">RTP Faster Funding</h4>
+          <dl>
+            <dt>Situation</dt><dd>Merchants waited for funds, especially over weekends and holidays, which hurt day-to-day cash flow.</dd>
+            <dt>Research</dt><dd>Settlement data showed delays concentrated in batch cycles. Segmenting merchants showed small and mid-sized retail, hospitality and service businesses hit hardest. Interviews confirmed they relied on daily funds for payroll, inventory and vendors, sometimes turning to credit.</dd>
+            <dt>Reframe</dt><dd>From a broad payout delay to a segment-specific cash-flow problem. Market benchmarking showed growing adoption of real-time payments as a differentiator.</dd>
+            <dt>Launch</dt><dd>Defined and launched RTP Faster Funding with engineering and business teams, prioritized by merchant impact and scalability, starting with high-impact SMB segments in a phased rollout.</dd>
+            <dt>Result</dt><dd>Near real-time payouts for eligible transactions in target segments, better cash flow across an 800,000-merchant platform, and more payout transparency for 4,000+ partners, protecting $500M+ in annual volume.</dd>
+          </dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-head"><span class="step">Impact</span><h3>Shipped outcomes</h3></div>
+      <div class="impact">
+        <div><div class="stat tnum">+15%</div><div class="stat-label">billing and partner payout accuracy</div></div>
+        <div><div class="stat tnum">+20%</div><div class="stat-label">operational efficiency from simplified pricing and self-service payouts</div></div>
+        <div><div class="stat tnum">+25%</div><div class="stat-label">on-time delivery of pricing, billing and settlement releases</div></div>
+        <div><div class="stat tnum">+20%</div><div class="stat-label">delivery efficiency through a clear, prioritized backlog</div></div>
+      </div>
+      <div class="three" style="margin-top:16px">
+        <div class="card"><h4>One roof for every merchant</h4><p>800K+ merchants and 4K partners priced, billed and paid out through one console and rules engine.</p></div>
+        <div class="card"><h4>Fewer disputes</h4><p>Guardrails before submission and transparent payouts after reduced billing errors and reconciliation tickets.</p></div>
+        <div class="card"><h4>Revenue protected</h4><p>Accurate pricing and faster funding protected $500M+ in annual processing volume.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <h2>About</h2>
+    <div class="two" style="margin-top:28px">
+      <div class="prose" style="display:grid;gap:14px">
+        <p>I'm a Senior Product Manager with 10+ years of experience building and scaling revenue-critical platforms across fintech, healthcare, retail, and telecom. I bridge technical rigor and business strategy to deliver products users rely on, whether launching 0-to-1 initiatives or modernizing legacy ecosystems in tightly regulated markets.</p>
+        <h4 class="about-h">How I work</h4>
+        <div class="about-list">
+          <div><b>Clarity in ambiguity.</b> I thrive in data-heavy, high-stakes environments. Using market research, customer insights, and core KPIs (adoption, engagement, and operational efficiency), I define what to build and why. When trade-offs aren't obvious, I frame decisions around revenue impact and risk so stakeholders can align with confidence.</div>
+          <div><b>Execution at scale.</b> Working across Agile engineering, UX, and business teams, I translate high-level vision into actionable roadmaps, epics, and backlogs that ship measurable outcomes.</div>
+          <div><b>AI-native product craft and governance.</b> I embed AI across my daily product workflow to accelerate discovery and delivery: synthesizing user interviews, distilling complex datasets, automating meeting documentation, and rapidly validating prototypes. With working knowledge of RAG and NLP architectures, I build practical AI features with strong governance, data privacy, and human-in-the-loop guardrails at the center.</div>
+        </div>
+        <h4 class="about-h">Selected impact</h4>
+        <div class="about-list">
+          <div><b>Multi-brand platform consolidation.</b> Led a multi-year transformation unifying 7 fragmented brand websites and workflows into a single scalable B2B/B2C ecosystem, cutting engineering rework by 50%, improving time-to-market by 20%, and reducing post-launch defects from 15% to 5%.</div>
+          <div><b>Enterprise design systems.</b> Built and governed a multi-brand design system from the ground up, driving adoption across 14 product and engineering teams, accelerating release velocity by 25%, and ensuring consistent accessibility and brand compliance across 100K+ users.</div>
+          <div><b>High-volume fintech infrastructure.</b> Improved settlement accuracy by 15% and boosted on-time delivery by 25% on payments systems serving 800,000+ merchants and protecting $500M+ in annual revenue.</div>
+        </div>
+        <p class="muted small">MS in Management, University of Illinois Urbana-Champaign · BTech in Information Technology, Anna University</p>
+        <div style="margin-top:8px">
+          <p class="eyebrow">Contact</p>
+          <p style="margin-top:6px"><a href="mailto:akshaya.sundarsharma@gmail.com">akshaya.sundarsharma@gmail.com</a></p>
+          <p class="small muted">Austin, Texas</p>
+        </div>
+      </div>
+      <div class="skills">
+        <div><h4>AI tools</h4><div class="comp"><span class="tag ai">Figma AI</span><span class="tag ai">Claude Code</span><span class="tag ai">ChatGPT</span><span class="tag ai">Google AI</span><span class="tag ai">RAG</span><span class="tag ai">NLP</span></div></div>
+        <div><h4>Data &amp; analytics</h4><div class="comp"><span class="tag">SQL</span><span class="tag">Tableau</span><span class="tag">Excel</span><span class="tag">Adobe Analytics</span><span class="tag">Google Analytics</span></div></div>
+        <div><h4>Product management</h4><div class="comp"><span class="tag">JIRA</span><span class="tag">Confluence</span><span class="tag">Rally</span><span class="tag">Azure DevOps</span><span class="tag">Figma</span><span class="tag">Miro</span><span class="tag">draw.io</span><span class="tag">MS Project</span><span class="tag">Office 365</span><span class="tag">PowerPoint</span></div></div>
+        <div><h4>Platforms &amp; integrations</h4><div class="comp"><span class="tag">Salesforce</span><span class="tag">SAP C</span><span class="tag">REST APIs</span><span class="tag">AWS Cloud</span><span class="tag">Storybook</span><span class="tag">Adobe AEM</span><span class="tag">NetSuite</span><span class="tag">Oracle ERP</span></div></div>
+        <div><h4>Methodologies</h4><div class="comp"><span class="tag">Agile</span><span class="tag">Scrum</span><span class="tag">SAFe</span><span class="tag">Kanban</span><span class="tag">SDLC</span><span class="tag">Design Thinking</span><span class="tag">A/B Testing</span></div></div>
+        <div><h4>Certifications</h4><div class="comp"><span class="tag">CSM</span><span class="tag">CSPO</span><span class="tag">Agile Professional</span><span class="tag">Strategic Management</span><span class="tag">AI for Product Management</span><span class="tag">Project Management</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Client work is shown with names and proprietary data removed. Wireframes are recreated for this portfolio, and rates in the pricing prototype are illustrative.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- Bridgestone wireframe switcher ---------- */
+  var bsScreen='home', bsVer='after';
+  function bsRender(){
+    document.querySelectorAll('[data-bs]').forEach(function(el){ el.hidden = el.getAttribute('data-bs') !== bsScreen+'-'+bsVer; });
+    document.querySelectorAll('[data-bs-screen]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.bsScreen===bsScreen); });
+    document.querySelectorAll('[data-bs-ver]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.bsVer===bsVer); });
+  }
+  document.querySelectorAll('[data-bs-screen]').forEach(function(b){ b.addEventListener('click',function(){ bsScreen=b.dataset.bsScreen; bsRender(); }); });
+  document.querySelectorAll('[data-bs-ver]').forEach(function(b){ b.addEventListener('click',function(){ bsVer=b.dataset.bsVer; bsRender(); }); });
+  bsRender();
+
+  /* ---------- Kumiko theme switcher ---------- */
+  var brands={
+    a:{name:'Signal',primary:'#C8102E',radius:'4px'},
+    b:{name:'Harbor',primary:'#1E3A5F',radius:'10px'},
+    c:{name:'Grove',primary:'#0F766E',radius:'999px'}
+  };
+  var ds=document.getElementById('ds'), tokEl=document.getElementById('tokens');
+  function dsRender(){
+    var br=brands[ds.dataset.brand], compact=ds.dataset.density==='compact';
+    var rows=[
+      ['color.action.primary',br.primary,true],
+      ['color.text.default','#1B1B1F',true],
+      ['color.border.subtle','#D4D6DB',true],
+      ['radius.control',br.radius,false],
+      ['space.control.padding',compact?'7px':'12px',false],
+      ['font.family.body','IBM Plex Sans',false]
+    ];
+    tokEl.innerHTML=rows.map(function(r){
+      return '<div><i style="background:'+(r[2]?r[1]:'transparent')+'"></i><b style="font-weight:500">'+r[0]+'</b><span>'+r[1]+'</span></div>';
+    }).join('');
+    document.querySelectorAll('[data-ds-brand]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.dsBrand===ds.dataset.brand); });
+    document.querySelectorAll('[data-ds-density]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.dsDensity===ds.dataset.density); });
+  }
+  document.querySelectorAll('[data-ds-brand]').forEach(function(b){ b.addEventListener('click',function(){ ds.dataset.brand=b.dataset.dsBrand; dsRender(); }); });
+  document.querySelectorAll('[data-ds-density]').forEach(function(b){ b.addEventListener('click',function(){ ds.dataset.density=b.dataset.dsDensity; dsRender(); }); });
+  dsRender();
+
+  /* ---------- Worldpay pricing builder ---------- */
+  var FLOOR=10, STANDARD=18, RES_REVIEW=50, RES_MAX=80;
+  var templates={
+    '5814':{label:'Quick service restaurant',mk:{visa:20,mc:20,disc:20,amex:25},monthly:9.95,pos:29,pci:0},
+    '5812':{label:'Full-service restaurant',mk:{visa:22,mc:22,disc:22,amex:27},monthly:9.95,pos:39,pci:0},
+    '5411':{label:'Grocery',mk:{visa:18,mc:18,disc:18,amex:22},monthly:14.95,pos:39,pci:4.95},
+    '5999':{label:'E-commerce retail',mk:{visa:30,mc:30,disc:30,amex:35},monthly:19.95,pos:0,pci:4.95}
+  };
+  var mccNames={'5814':'5814 · Fast food','5812':'5812 · Restaurants','5411':'5411 · Grocery','5999':'5999 · Online retail'};
+  var txTypes=[
+    {label:'Visa · swiped / tapped',brand:'visa',ic:1.50,as:0.13},
+    {label:'Visa · keyed / online',brand:'visa',ic:1.80,as:0.13},
+    {label:'Mastercard · tapped',brand:'mc',ic:1.55,as:0.13},
+    {label:'Amex · keyed',brand:'amex',ic:1.70,as:0.15}
+  ];
+  var brandNames={visa:'Visa',mc:'Mastercard',disc:'Discover',amex:'Amex'};
+  function fresh(){
+    var t=templates['5814'];
+    return {step:1,maxStep:1,submitted:false,merchant:'Bean & Brew Coffee',mcc:'5814',mk:Object.assign({},t.mk),perTxn:0,monthly:t.monthly,pos:t.pos,pci:t.pci,advOpen:false,partner:'Northline POS (ISV)',resPct:25};
+  }
+  var S=(window.claude&&window.claude.hot&&window.claude.hot.data&&window.claude.hot.data.step)?window.claude.hot.data:fresh();
+  if(window.claude&&window.claude.hot&&window.claude.hot.snapshot){ window.claude.hot.snapshot(function(){return S;}); }
+
+  function money(n){return '$'+n.toFixed(2);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function mkState(v){ if(isNaN(v)||v<FLOOR) return 'bad'; if(v<STANDARD) return 'warn'; return 'ok'; }
+  function evaluate(){
+    var blocks=[], routes=[];
+    Object.keys(S.mk).forEach(function(b){
+      var v=S.mk[b], st=mkState(v);
+      if(st==='bad') blocks.push(brandNames[b]+' markup is '+(isNaN(v)?'empty':v+' bps')+', below the '+FLOOR+' bps cost-to-serve floor.');
+      else if(st==='warn') routes.push(brandNames[b]+' markup '+v+' bps is under the '+STANDARD+' bps standard. Routes to a pricing manager.');
+    });
+    if(isNaN(S.resPct)||S.resPct<0) blocks.push('Partner residual share is missing.');
+    else if(S.resPct>=RES_MAX) blocks.push('A '+S.resPct+'% residual leaves Worldpay below its margin floor. Keep it under '+RES_MAX+'%.');
+    else if(S.resPct>RES_REVIEW) routes.push('Residual share '+S.resPct+'% is above '+RES_REVIEW+'%. Routes to partner operations.');
+    var status=blocks.length?'bad':(routes.length?'warn':'ok');
+    return {blocks:blocks,routes:routes,status:status};
+  }
+  function stepValid(n){
+    var e=evaluate();
+    if(n===1) return S.merchant.trim().length>0;
+    if(n===2) return !Object.keys(S.mk).some(function(b){return mkState(S.mk[b])==='bad';});
+    if(n===3) return !isNaN(S.resPct)&&S.resPct>=0&&S.resPct<RES_MAX;
+    return e.status!=='bad';
+  }
+  var steps=['Merchant','Rates','Partner','Review'];
+
+  function renderStepper(){
+    var el=document.getElementById('stepper');
+    el.innerHTML=steps.map(function(name,i){
+      var n=i+1, cur=n===S.step&&!S.submitted, done=n<S.step||S.submitted;
+      var can=n<=S.maxStep&&!S.submitted;
+      return '<button type="button" data-goto="'+n+'"'+(cur?' aria-current="step"':'')+(done?' class="done"':'')+(can?'':' disabled')+'><i>'+(done?'✓':n)+'</i>'+name+'</button>';
+    }).join('');
+    el.querySelectorAll('[data-goto]').forEach(function(b){ b.addEventListener('click',function(){ S.step=+b.dataset.goto; renderAll(true); }); });
+  }
+
+  function mkField(b){
+    var v=S.mk[b], st=mkState(v);
+    var help= st==='bad'?'Below the '+FLOOR+' bps floor. Raise to at least '+FLOOR+'.' : st==='warn'?'Under '+STANDARD+' bps. Needs pricing manager approval.' : 'Within standard. Auto-approves.';
+    return '<div class="f '+(st==='ok'?'':st)+'"><label for="mk-'+b+'">'+brandNames[b]+' markup</label><div class="unit"><input id="mk-'+b+'" type="number" inputmode="numeric" min="0" max="200" step="1" value="'+(isNaN(v)?'':v)+'" data-mk="'+b+'"><span>bps</span></div><span class="help" id="mk-'+b+'-help">'+help+'</span></div>';
+  }
+
+  function renderBody(){
+    var body=document.getElementById('step-body'), h='';
+    if(S.submitted){
+      var e=evaluate();
+      h='<div class="success"><div class="check">✓</div><h4 style="font-size:24px">'+(e.status==='warn'?'Sent for approval':'Pricing activated')+'</h4>'+
+        '<p class="muted">'+esc(S.merchant)+' · pricing version v1 · '+(e.status==='warn'?e.routes.length+' approval'+(e.routes.length>1?'s':'')+' pending. You will be notified when it is approved.':'Pushed to POS, billing and partner residuals.')+'</p>'+
+        '<p class="small muted">Every change is versioned for audit and compliance.</p></div>';
+    } else if(S.step===1){
+      var t=templates[S.mcc];
+      h='<div class="fgrid">'+
+        '<div class="f full"><label for="m-name">Merchant name</label><input id="m-name" value="'+esc(S.merchant)+'"><span class="help">As it appears on the merchant agreement.</span></div>'+
+        '<div class="f full"><label for="m-mcc">Merchant category (MCC)</label><select id="m-mcc">'+Object.keys(mccNames).map(function(k){return '<option value="'+k+'"'+(k===S.mcc?' selected':'')+'>'+mccNames[k]+'</option>';}).join('')+'</select><span class="help">Choosing a category applies its pricing template.</span></div>'+
+        '<div class="tpl f full"><span>Template applied: <b>'+t.label+'</b> · card markups, monthly and POS fees prefilled</span></div>'+
+        '</div>';
+    } else if(S.step===2){
+      var nonDefault=[S.monthly,S.pos,S.pci,S.perTxn].filter(function(x){return x>0;}).length;
+      h='<div class="fgrid">'+['visa','mc','disc','amex'].map(mkField).join('')+'</div>'+
+        '<details class="adv" id="adv"'+(S.advOpen?' open':'')+'><summary>Advanced fees<span>'+nonDefault+' active</span></summary><div class="fgrid">'+
+        '<div class="f"><label for="f-txn">Per-transaction fee</label><div class="unit"><input id="f-txn" type="number" min="0" step="0.01" value="'+S.perTxn+'" data-fee="perTxn"><span>USD</span></div></div>'+
+        '<div class="f"><label for="f-mon">Monthly service fee</label><div class="unit"><input id="f-mon" type="number" min="0" step="0.01" value="'+S.monthly+'" data-fee="monthly"><span>USD</span></div></div>'+
+        '<div class="f"><label for="f-pos">POS rental</label><div class="unit"><input id="f-pos" type="number" min="0" step="0.01" value="'+S.pos+'" data-fee="pos"><span>USD</span></div></div>'+
+        '<div class="f"><label for="f-pci">PCI compliance</label><div class="unit"><input id="f-pci" type="number" min="0" step="0.01" value="'+S.pci+'" data-fee="pci"><span>USD</span></div></div>'+
+        '</div></details>';
+    } else if(S.step===3){
+      var st=isNaN(S.resPct)?'bad':S.resPct>=RES_MAX?'bad':S.resPct>RES_REVIEW?'warn':'';
+      var help=st==='bad'?'Must be under '+RES_MAX+'% so Worldpay stays above its margin floor.':st==='warn'?'Above '+RES_REVIEW+'%. Needs partner operations approval.':'Share of Worldpay’s markup paid to the referring partner.';
+      h='<div class="fgrid">'+
+        '<div class="f full"><label for="p-partner">Referring partner</label><select id="p-partner">'+['Northline POS (ISV)','Harborview Payments (VAR)','No partner'].map(function(p){return '<option'+(p===S.partner?' selected':'')+'>'+p+'</option>';}).join('')+'</select></div>'+
+        (S.partner==='No partner'?'':'<div class="f '+st+'"><label for="p-res">Residual share of markup</label><div class="unit"><input id="p-res" type="number" min="0" max="100" step="1" value="'+(isNaN(S.resPct)?'':S.resPct)+'"><span>%</span></div><span class="help" id="p-res-help">'+help+'</span></div>')+
+        '</div>';
+    } else {
+      var e2=evaluate();
+      h='<div class="review"><dl>'+
+        '<dt>Merchant</dt><dd>'+esc(S.merchant)+'</dd>'+
+        '<dt>Category</dt><dd>'+mccNames[S.mcc]+'</dd>'+
+        '<dt>Markups</dt><dd>'+Object.keys(S.mk).map(function(b){return brandNames[b]+' '+(isNaN(S.mk[b])?'—':S.mk[b])+' bps';}).join(' · ')+'</dd>'+
+        '<dt>Monthly fees</dt><dd>'+money(S.monthly+S.pos+S.pci)+' / month</dd>'+
+        '<dt>Partner</dt><dd>'+esc(S.partner)+(S.partner==='No partner'?'':' · '+S.resPct+'% of markup')+'</dd>'+
+        '</dl><p class="small muted" style="margin-top:16px">'+(e2.status==='bad'?'Fix the blocked items before submitting.':e2.status==='warn'?'Submitting sends this to the approvers listed.':'Everything is within standard. Submitting activates pricing now.')+'</p></div>';
+    }
+    body.innerHTML=h;
+    bindBody();
+  }
+
+  function bindBody(){
+    var n=document.getElementById('m-name'); if(n) n.addEventListener('input',function(){ S.merchant=n.value; renderNav(); });
+    var m=document.getElementById('m-mcc'); if(m) m.addEventListener('change',function(){ var t=templates[m.value]; S.mcc=m.value; S.mk=Object.assign({},t.mk); S.monthly=t.monthly; S.pos=t.pos; S.pci=t.pci; renderAll(); });
+    document.querySelectorAll('[data-mk]').forEach(function(inp){
+      inp.addEventListener('input',function(){
+        var b=inp.dataset.mk; S.mk[b]=inp.value===''?NaN:+inp.value;
+        var st=mkState(S.mk[b]), f=inp.closest('.f');
+        f.className='f '+(st==='ok'?'':st);
+        document.getElementById('mk-'+b+'-help').textContent= st==='bad'?'Below the '+FLOOR+' bps floor. Raise to at least '+FLOOR+'.' : st==='warn'?'Under '+STANDARD+' bps. Needs pricing manager approval.' : 'Within standard. Auto-approves.';
+        renderSide(); renderNav();
+      });
+    });
+    document.querySelectorAll('[data-fee]').forEach(function(inp){ inp.addEventListener('input',function(){ S[inp.dataset.fee]=Math.max(0,+inp.value||0); renderSide(); }); });
+    var adv=document.getElementById('adv'); if(adv) adv.addEventListener('toggle',function(){ S.advOpen=adv.open; });
+    var p=document.getElementById('p-partner'); if(p) p.addEventListener('change',function(){ S.partner=p.value; if(S.partner==='No partner') S.resPct=0; else if(!S.resPct) S.resPct=25; renderAll(); });
+    var r=document.getElementById('p-res'); if(r) r.addEventListener('input',function(){
+      S.resPct=r.value===''?NaN:+r.value;
+      var st=isNaN(S.resPct)?'bad':S.resPct>=RES_MAX?'bad':S.resPct>RES_REVIEW?'warn':'';
+      r.closest('.f').className='f '+st;
+      document.getElementById('p-res-help').textContent=st==='bad'?'Must be under '+RES_MAX+'% so Worldpay stays above its margin floor.':st==='warn'?'Above '+RES_REVIEW+'%. Needs partner operations approval.':'Share of Worldpay’s markup paid to the referring partner.';
+      renderSide(); renderNav();
+    });
+  }
+
+  function renderNav(){
+    var nav=document.getElementById('proto-nav');
+    if(S.submitted){ nav.innerHTML='<span></span><button type="button" class="btn sec" id="restart">Start a new pricing</button>'; document.getElementById('restart').onclick=function(){ S=fresh(); renderAll(true); }; return; }
+    var ok=stepValid(S.step), e=evaluate();
+    var label=S.step<4?'Continue':(e.status==='warn'?'Submit for approval':'Activate pricing');
+    nav.innerHTML='<button type="button" class="btn sec" id="back"'+(S.step===1?' disabled':'')+'>Back</button><button type="button" class="btn" id="next"'+(ok?'':' disabled')+'>'+label+'</button>';
+    document.getElementById('back').onclick=function(){ if(S.step>1){S.step--; renderAll(true);} };
+    document.getElementById('next').onclick=function(){
+      if(!stepValid(S.step)) return;
+      if(S.step<4){ S.step++; S.maxStep=Math.max(S.maxStep,S.step); } else { S.submitted=true; }
+      renderAll(true);
+    };
+  }
+
+  function renderSide(){
+    var rows='<thead><tr><th>Transaction</th><th>Interchange</th><th>Network</th><th>Markup</th><th>Total</th></tr></thead><tbody>';
+    txTypes.forEach(function(t){
+      var mk=S.mk[t.brand]; var mkD=isNaN(mk)?0:mk/100;
+      var tot=t.ic+t.as+mkD+(S.perTxn||0);
+      var st=mkState(mk);
+      rows+='<tr><td>'+t.label+'</td><td>'+money(t.ic)+'</td><td>'+money(t.as)+'</td><td style="color:'+(st==='bad'?'var(--bad)':st==='warn'?'var(--warn)':'inherit')+'">'+(isNaN(mk)?'—':money(mkD+(S.perTxn||0)))+'</td><td class="tot">'+money(tot)+'</td></tr>';
+    });
+    rows+='</tbody>';
+    document.getElementById('fee-table').innerHTML=rows;
+    var rl=document.getElementById('residual-line');
+    if(S.partner==='No partner') rl.textContent='No referring partner. Worldpay keeps the full markup.';
+    else {
+      var vm=isNaN(S.mk.visa)?0:S.mk.visa, pct=isNaN(S.resPct)?0:S.resPct;
+      var pay=vm/100*pct/100;
+      rl.innerHTML=esc(S.partner)+' earns <b class="tnum">'+money(pay)+'</b> per $100 Visa sale ('+(vm*pct/100).toFixed(1)+' bps of volume). Worldpay keeps <b class="tnum">'+money(vm/100-pay)+'</b>.';
+    }
+    var e=evaluate();
+    var pill=document.getElementById('status-pill');
+    pill.className='pill '+e.status;
+    pill.textContent=e.status==='bad'?'Blocked':e.status==='warn'?'Needs approval':'Auto-approved';
+    var list=document.getElementById('route-list');
+    var items=e.blocks.map(function(b){return '<li class="bad">'+esc(b)+'</li>';}).concat(e.routes.map(function(r){return '<li class="warn">'+esc(r)+'</li>';}));
+    if(!items.length) items=['<li>All markups at or above '+STANDARD+' bps and residual within '+RES_REVIEW+'%. No approver needed.</li>'];
+    list.innerHTML=items.join('');
+  }
+
+  function renderAll(focusTop){
+    renderStepper(); renderBody(); renderNav(); renderSide();
+  }
+  renderAll();
+})();
+</script>
+</body>
+</html>
